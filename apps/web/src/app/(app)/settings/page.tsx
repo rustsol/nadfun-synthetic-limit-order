@@ -178,7 +178,7 @@ export default function SettingsPage() {
             {showKey && exportedKey && (
               <div className="bg-red-900/20 border border-red-800 rounded-lg p-3 space-y-2">
                 <p className="text-xs text-red-400 font-medium">
-                  Private Key — Keep this safe! Anyone with this key can access funds.
+                  Private Key: Keep this safe! Anyone with this key can access funds.
                 </p>
                 <div className="bg-gray-900 rounded p-2 text-xs font-mono text-gray-300 break-all select-all">
                   {exportedKey}

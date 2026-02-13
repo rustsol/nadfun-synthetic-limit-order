@@ -16,7 +16,7 @@ const BUY_TRIGGERS = [
   { value: 'PROGRESS_BELOW', label: 'Progress drops to (%)' },
   { value: 'MCAP_BELOW', label: 'Market cap drops below (MON)' },
   { value: 'MCAP_BELOW_USD', label: 'Market cap drops below (USD)' },
-  { value: 'DCA_INTERVAL', label: 'DCA — Buy at regular intervals' },
+  { value: 'DCA_INTERVAL', label: 'DCA, Buy at regular intervals' },
   { value: 'PRICE_DROP_PCT', label: 'Price drops by % from current' },
 ];
 
@@ -26,8 +26,8 @@ const SELL_TRIGGERS = [
   { value: 'POST_GRADUATION', label: 'After graduation to DEX' },
   { value: 'MCAP_ABOVE', label: 'Market cap rises above (MON)' },
   { value: 'MCAP_ABOVE_USD', label: 'Market cap rises above (USD)' },
-  { value: 'TRAILING_STOP', label: 'Trailing stop — drop % from peak' },
-  { value: 'TAKE_PROFIT', label: 'Take profit — gain % from current' },
+  { value: 'TRAILING_STOP', label: 'Trailing stop, drop % from peak' },
+  { value: 'TAKE_PROFIT', label: 'Take profit, gain % from current' },
 ];
 
 const DCA_INTERVALS = [
