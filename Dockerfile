@@ -19,11 +19,14 @@ COPY packages/db/ packages/db/
 COPY apps/agent/ apps/agent/
 COPY tsconfig.base.json ./
 
+# Build shared package
+RUN npm -w packages/shared run build
+
 # Generate Prisma client
 RUN cd packages/db && npx prisma generate
 
 # Expose port
 EXPOSE 3001
 
-# Start agent
-CMD ["npx", "tsx", "apps/agent/src/index.ts"]
+# Push DB schema then start agent
+CMD sh -c "cd packages/db && npx prisma db push --skip-generate && cd /app && npx tsx apps/agent/src/index.ts"
