@@ -60,6 +60,7 @@ function shortenHash(hash: string): string {
 export function OrderCard({ order, onRefresh }: Props) {
   const triggerLog = order.executionLogs?.find((l: any) => l.action === 'TX_CONFIRMED' || l.action === 'TRIGGER');
   const failLog = order.executionLogs?.find((l: any) => l.action === 'TX_FAILED');
+  const aiBlockLog = order.executionLogs?.find((l: any) => l.action === 'ABORT' && l.reason?.includes('AI Risk Check'));
   const txHash = order.txHash || triggerLog?.txHash;
 
   const handleCancel = async () => {
@@ -129,6 +130,15 @@ export function OrderCard({ order, onRefresh }: Props) {
           >
             {shortenHash(txHash)}
           </a>
+        </div>
+      )}
+
+      {/* AI Risk Check blocked */}
+      {order.status === 'ACTIVE' && aiBlockLog && (
+        <div className="bg-yellow-900/20 border border-yellow-800/40 rounded-lg p-2 space-y-1">
+          <p className="text-xs text-yellow-400 font-medium">AI Risk Check Blocked</p>
+          <p className="text-xs text-yellow-300/80">{aiBlockLog.reason?.replace('AI Risk Check blocked execution ', '').replace(/^\(.*?\):\s*/, '')}</p>
+          <p className="text-[10px] text-gray-500">Disable AI Risk Check in Settings or the header toggle to proceed.</p>
         </div>
       )}
 

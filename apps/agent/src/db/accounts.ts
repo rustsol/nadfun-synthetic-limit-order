@@ -97,6 +97,7 @@ export async function getAccount(walletAddress: string) {
     walletAddress: user.walletAddress,
     agentAddress: user.agentAddress,
     autoExecute: user.autoExecute,
+    aiRiskCheck: user.aiRiskCheck,
     createdAt: user.createdAt,
   };
 }

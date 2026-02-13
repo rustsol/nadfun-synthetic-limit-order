@@ -71,7 +71,6 @@ export default function OrderbookPage() {
     return () => clearInterval(interval);
   }, [tokenAddress]);
 
-  // Find max inputAmount for bar width calculation
   const allOrders = [...(orderbook?.buyOrders || []), ...(orderbook?.sellOrders || [])];
   const maxAmount = allOrders.reduce((max, o) => {
     try {
@@ -115,82 +114,52 @@ export default function OrderbookPage() {
         <div className="text-center text-gray-500 py-12">Failed to load orderbook</div>
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          {/* Buy Orders (Bids) */}
           <div className="bg-gray-900 border border-gray-800 rounded-xl overflow-hidden">
             <div className="px-4 py-3 border-b border-gray-800 flex items-center justify-between">
               <h3 className="text-sm font-bold text-green-400">Bids (Buy Orders)</h3>
               <span className="text-xs text-gray-500">{orderbook.totalBuyOrders} orders</span>
             </div>
-
-            {/* Header */}
             <div className="grid grid-cols-3 px-4 py-2 text-[10px] text-gray-500 uppercase tracking-wider border-b border-gray-800/50">
               <div>Price / Trigger</div>
               <div className="text-right">Amount (MON)</div>
               <div className="text-right">Type</div>
             </div>
-
-            {/* Rows */}
             <div className="max-h-80 overflow-y-auto">
               {orderbook.buyOrders.length === 0 ? (
                 <div className="px-4 py-8 text-center text-gray-600 text-xs">No buy orders</div>
               ) : (
                 orderbook.buyOrders.map(order => (
                   <div key={order.id} className="relative grid grid-cols-3 px-4 py-2 text-xs hover:bg-gray-800/30">
-                    {/* Background bar */}
-                    <div
-                      className="absolute inset-y-0 right-0 bg-green-900/15"
-                      style={{ width: getBarWidth(order.inputAmount) }}
-                    />
-                    <div className="relative text-green-400 font-mono">
-                      {formatPrice(order.triggerValue, order.triggerType)}
-                    </div>
-                    <div className="relative text-right text-gray-300 font-mono">
-                      {formatAmount(order.inputAmount)}
-                    </div>
-                    <div className="relative text-right text-gray-500">
-                      {order.triggerType.replace('PRICE_', '').replace('PROGRESS_', 'Prog ')}
-                    </div>
+                    <div className="absolute inset-y-0 right-0 bg-green-900/15" style={{ width: getBarWidth(order.inputAmount) }} />
+                    <div className="relative text-green-400 font-mono">{formatPrice(order.triggerValue, order.triggerType)}</div>
+                    <div className="relative text-right text-gray-300 font-mono">{formatAmount(order.inputAmount)}</div>
+                    <div className="relative text-right text-gray-500">{order.triggerType.replace('PRICE_', '').replace('PROGRESS_', 'Prog ')}</div>
                   </div>
                 ))
               )}
             </div>
           </div>
 
-          {/* Sell Orders (Asks) */}
           <div className="bg-gray-900 border border-gray-800 rounded-xl overflow-hidden">
             <div className="px-4 py-3 border-b border-gray-800 flex items-center justify-between">
               <h3 className="text-sm font-bold text-red-400">Asks (Sell Orders)</h3>
               <span className="text-xs text-gray-500">{orderbook.totalSellOrders} orders</span>
             </div>
-
-            {/* Header */}
             <div className="grid grid-cols-3 px-4 py-2 text-[10px] text-gray-500 uppercase tracking-wider border-b border-gray-800/50">
               <div>Price / Trigger</div>
               <div className="text-right">Amount (Tokens)</div>
               <div className="text-right">Type</div>
             </div>
-
-            {/* Rows */}
             <div className="max-h-80 overflow-y-auto">
               {orderbook.sellOrders.length === 0 ? (
                 <div className="px-4 py-8 text-center text-gray-600 text-xs">No sell orders</div>
               ) : (
                 orderbook.sellOrders.map(order => (
                   <div key={order.id} className="relative grid grid-cols-3 px-4 py-2 text-xs hover:bg-gray-800/30">
-                    {/* Background bar */}
-                    <div
-                      className="absolute inset-y-0 right-0 bg-red-900/15"
-                      style={{ width: getBarWidth(order.inputAmount) }}
-                    />
-                    <div className="relative text-red-400 font-mono">
-                      {formatPrice(order.triggerValue, order.triggerType)}
-                    </div>
-                    <div className="relative text-right text-gray-300 font-mono">
-                      {formatAmount(order.inputAmount)}
-                    </div>
-                    <div className="relative text-right text-gray-500">
-                      {order.triggerType.replace('PRICE_', '').replace('PROGRESS_', 'Prog ').replace('POST_GRADUATION', 'Grad')}
-                    </div>
+                    <div className="absolute inset-y-0 right-0 bg-red-900/15" style={{ width: getBarWidth(order.inputAmount) }} />
+                    <div className="relative text-red-400 font-mono">{formatPrice(order.triggerValue, order.triggerType)}</div>
+                    <div className="relative text-right text-gray-300 font-mono">{formatAmount(order.inputAmount)}</div>
+                    <div className="relative text-right text-gray-500">{order.triggerType.replace('PRICE_', '').replace('PROGRESS_', 'Prog ').replace('POST_GRADUATION', 'Grad')}</div>
                   </div>
                 ))
               )}
@@ -199,7 +168,6 @@ export default function OrderbookPage() {
         </div>
       )}
 
-      {/* Spread indicator */}
       {orderbook && orderbook.buyOrders.length > 0 && orderbook.sellOrders.length > 0 && (
         <div className="text-center text-xs text-gray-500">
           Spread: {(() => {
