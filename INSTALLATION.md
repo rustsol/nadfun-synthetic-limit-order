@@ -1,6 +1,6 @@
-# Nad.fun Synthetic Limit Order Platform -- Installation and Setup Guide
+# Synthetic Order Flow Platform: Installation and Setup Guide
 
-This document provides comprehensive instructions for setting up the Nad.fun Synthetic Limit Order Platform locally. The platform is a monorepo built with npm workspaces, targeting the Monad blockchain (chain ID 143). It consists of a backend agent server, a Next.js frontend, shared libraries, and a Prisma-managed MySQL database.
+This document provides comprehensive instructions for setting up the nad.fun Synthetic Limit Order Platform locally. The platform is a monorepo built with npm workspaces, targeting the Monad blockchain (chain ID 143). It consists of a backend agent server, a Next.js frontend, shared libraries, and a Prisma-managed MySQL database.
 
 ---
 
@@ -55,10 +55,10 @@ npm install
 
 The `npm install` command installs dependencies for all workspaces defined in the root `package.json`:
 
-- `packages/shared` -- Shared types, constants, ABIs, and utilities
-- `packages/db` -- Prisma client and database schema
-- `apps/agent` -- Backend agent server
-- `apps/web` -- Next.js frontend
+- `packages/shared`: Shared types, constants, ABIs, and utilities
+- `packages/db`: Prisma client and database schema
+- `apps/agent`: Backend agent server
+- `apps/web`: Next.js frontend
 
 ---
 
@@ -124,8 +124,8 @@ mysql://<user>:<password>@<host>:<port>/nadfun_limit_orders
 
 The `DATABASE_URL` must be set in **two** places:
 
-1. **Root `.env` file** -- Used by the agent at runtime via `dotenv/config`
-2. **`packages/db/.env`** -- Used by the Prisma CLI for migrations, schema push, and generation
+1. **Root `.env` file**: Used by the agent at runtime via `dotenv/config`
+2. **`packages/db/.env`**: Used by the Prisma CLI for migrations, schema push, and generation
 
 Both files must contain the same connection string to avoid inconsistencies.
 
@@ -143,8 +143,8 @@ npx prisma db push
 
 **What these commands do:**
 
-- `npx prisma generate` -- Generates the Prisma Client based on the schema definition, making it available for import in application code.
-- `npx prisma db push` -- Pushes the schema to the database, creating all tables and columns. This is a non-destructive sync that creates missing tables and columns without dropping data.
+- `npx prisma generate`: Generates the Prisma Client based on the schema definition, making it available for import in application code.
+- `npx prisma db push`: Pushes the schema to the database, creating all tables and columns. This is a non-destructive sync that creates missing tables and columns without dropping data.
 
 This creates the following tables: **UserAccount**, **Order**, **ExecutionLog**, and **AiConfig**.
 
@@ -241,13 +241,13 @@ TX_DEADLINE_SECONDS=300
 NEXT_PUBLIC_WALLETCONNECT_PROJECT_ID=<your-walletconnect-project-id>
 NEXT_PUBLIC_AGENT_URL=http://localhost:3001
 
-# AI Provider Keys (optional -- for order execution explanations)
+# AI Provider Keys (optional, for order execution explanations)
 DEFAULT_GROQ_API_KEY=
 DEFAULT_CLAUDE_API_KEY=
 DEFAULT_OPENAI_API_KEY=
 DEFAULT_GEMINI_API_KEY=
 
-# Security -- CHANGE THIS IN PRODUCTION!
+# Security - CHANGE THIS IN PRODUCTION!
 AGENT_ENCRYPTION_KEY=<generate-a-strong-random-32-char-key>
 ```
 
@@ -315,7 +315,7 @@ npx next build
 
 You need two terminal windows (or tabs) to run both services simultaneously.
 
-**Terminal 1 -- Agent:**
+**Terminal 1 - Agent:**
 
 Run from the repository root directory so that `dotenv/config` correctly loads the root `.env` file:
 
@@ -323,7 +323,7 @@ Run from the repository root directory so that `dotenv/config` correctly loads t
 npx tsx apps/agent/src/index.ts
 ```
 
-**Terminal 2 -- Frontend:**
+**Terminal 2 - Frontend:**
 
 ```bash
 cd apps/web

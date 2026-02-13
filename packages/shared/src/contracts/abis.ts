@@ -1,5 +1,5 @@
 // ABI exports — imported as const arrays for viem type inference
-// These are the Nad.fun v3 contract ABIs from https://github.com/Naddotfun/contract-v3-abi
+// These are the nad.fun v3 contract ABIs from https://github.com/Naddotfun/contract-v3-abi
 
 export { default as lensAbi } from './abi-json/ILens.json';
 export { default as bondingCurveRouterAbi } from './abi-json/IBondingCurveRouter.json';

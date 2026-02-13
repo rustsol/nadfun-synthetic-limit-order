@@ -34,16 +34,16 @@ export interface TokenChainState {
   buyAmountOut: bigint;
   sellRouter: string;
   sellAmountOut: bigint;
-  // Nad.fun API market data
+  // nad.fun API market data
   nadMarket?: NadFunMarketInfo;
 }
 
-// In-memory cache for Nad.fun market data (refreshed per fetch cycle)
+// In-memory cache for nad.fun market data (refreshed per fetch cycle)
 let nadMarketCache = new Map<string, NadFunMarketInfo>();
 let nadCacheTimestamp = 0;
 const NAD_CACHE_TTL = 10_000; // 10 seconds
 
-/** Fetch market data from Nad.fun API, searching through pages */
+/** Fetch market data from nad.fun API, searching through pages */
 export async function fetchNadFunMarket(tokenAddress: string): Promise<NadFunMarketInfo | undefined> {
   const addrLower = tokenAddress.toLowerCase();
 
@@ -86,7 +86,7 @@ export async function fetchTokenState(tokenAddress: string): Promise<TokenChainS
   const lensAddr = CONTRACTS.LENS as `0x${string}`;
   const oneToken = parseEther('1');
 
-  // Fetch on-chain state and Nad.fun API market data in parallel
+  // Fetch on-chain state and nad.fun API market data in parallel
   const [results, nadMarket] = await Promise.all([
     publicClient.multicall({
       contracts: [

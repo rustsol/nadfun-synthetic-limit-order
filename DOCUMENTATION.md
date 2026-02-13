@@ -1,4 +1,4 @@
-# Nad.fun Synthetic Limit Order Platform
+# Synthetic Order Flow Platform
 
 ## Table of Contents
 
@@ -26,9 +26,9 @@
 
 ## Project Context
 
-Nad.fun is a meme token launchpad on the Monad blockchain (chain ID 143) that uses bonding curves to bootstrap token liquidity. Tokens begin their lifecycle on a bonding curve, where the price rises algorithmically as more buyers enter. When a token reaches its target liquidity threshold, it "graduates" from the bonding curve and migrates to a decentralized exchange (DEX) for open market trading.
+nad.fun is a meme token launchpad on the Monad blockchain (chain ID 143) that uses bonding curves to bootstrap token liquidity. Tokens begin their lifecycle on a bonding curve, where the price rises algorithmically as more buyers enter. When a token reaches its target liquidity threshold, it "graduates" from the bonding curve and migrates to a decentralized exchange (DEX) for open market trading.
 
-Nad.fun does not natively support limit orders. Users can only execute immediate market buys and sells against the bonding curve or DEX. This project fills that gap by providing **synthetic limit orders** -- orders that are monitored off-chain by an automated agent and executed on-chain when user-defined trigger conditions are met.
+nad.fun does not natively support limit orders. Users can only execute immediate market buys and sells against the bonding curve or DEX. This project fills that gap by providing **synthetic limit orders**: orders that are monitored off-chain by an automated agent and executed on-chain when user-defined trigger conditions are met.
 
 The term "synthetic" reflects that these are not native protocol-level limit orders. Instead, the system continuously polls on-chain state and external market data, evaluates each active order against its trigger conditions, and submits transactions to the blockchain when those conditions are satisfied.
 
@@ -36,8 +36,8 @@ Key characteristics:
 
 - **Off-chain monitoring, on-chain execution**: The agent watches prices and market conditions off-chain, but all trades settle on Monad as real blockchain transactions.
 - **Agent wallets**: Each user gets a dedicated system-generated wallet. The agent holds the user's trading funds and executes transactions autonomously.
-- **Deterministic evaluation**: Trading decisions are purely rule-based. There is no AI involved in deciding when to trade -- the evaluator checks conditions with exact comparisons against thresholds.
-- **AI agent layer**: AI models (Groq, Claude, OpenAI, or Gemini) power five capabilities: post-execution explanations, token analysis, strategy suggestions, pre-execution risk checks, and conversational chat. While AI now plays a broader role in analysis and user interaction, all trading decisions remain deterministic -- the evaluator still makes the final call with exact comparisons against thresholds.
+- **Deterministic evaluation**: Trading decisions are purely rule-based. There is no AI involved in deciding when to trade: the evaluator checks conditions with exact comparisons against thresholds.
+- **AI agent layer**: AI models (Groq, Claude, OpenAI, or Gemini) power five capabilities: post-execution explanations, token analysis, strategy suggestions, pre-execution risk checks, and conversational chat. While AI now plays a broader role in analysis and user interaction, all trading decisions remain deterministic: the evaluator still makes the final call with exact comparisons against thresholds.
 - **Dual-router support**: The agent automatically detects whether a token is still on the bonding curve or has graduated to the DEX, and routes transactions to the correct contract.
 
 ---
@@ -52,37 +52,37 @@ nadfun-synthetic-limit-order/
     shared/        # Shared types, constants, ABIs, utility functions
     db/            # Prisma ORM schema and client (MySQL)
   apps/
-    agent/         # Express server (port 3001) -- monitor, execution engine, AI layer
-    web/           # Next.js frontend (port 3000) -- RainbowKit wallet UI
+    agent/         # Express server (port 3001) - monitor, execution engine, AI layer
+    web/           # Next.js frontend (port 3000) - RainbowKit wallet UI
 ```
 
 ### Packages
 
-**`packages/shared`** -- Contains all shared TypeScript types (`Direction`, `TriggerType`, `OrderStatus`, `CreateOrderRequest`, `UnsignedTxPayload`, `AiMessage`, `AiProvider`, `AiProviderConfig`), contract addresses, ABI definitions, the Monad chain configuration, and utility functions for price calculation and slippage math.
+**`packages/shared`**: Contains all shared TypeScript types (`Direction`, `TriggerType`, `OrderStatus`, `CreateOrderRequest`, `UnsignedTxPayload`, `AiMessage`, `AiProvider`, `AiProviderConfig`), contract addresses, ABI definitions, the Monad chain configuration, and utility functions for price calculation and slippage math.
 
-**`packages/db`** -- Contains the Prisma schema (`schema.prisma`) and generates the Prisma client. Database is MySQL, defaulting to `mysql://root:@localhost:3306/nadfun_limit_orders`.
+**`packages/db`**: Contains the Prisma schema (`schema.prisma`) and generates the Prisma client. Database is MySQL, defaulting to `mysql://root:@localhost:3306/nadfun_limit_orders`.
 
 ### Applications
 
-**`apps/agent`** -- The backend agent server built on Express. It runs on port 3001 (configurable via `AGENT_PORT`) and contains:
+**`apps/agent`**: The backend agent server built on Express. It runs on port 3001 (configurable via `AGENT_PORT`) and contains:
 
 - **Monitor loop** (`monitor/loop.ts`): Runs every 5 seconds (configurable via `MONITOR_INTERVAL_MS`). Fetches all active orders from the database, batch-fetches on-chain token states via Lens contract multicall, evaluates each order against its trigger conditions, and auto-executes triggered trades.
 - **Evaluator** (`monitor/evaluator.ts`): Pure-function deterministic evaluator. Takes an order and a token state, returns whether the order should trigger, abort, or keep waiting.
-- **State fetcher** (`monitor/state-fetcher.ts`): Fetches on-chain token data (name, symbol, graduation status, lock status, bonding curve progress, buy/sell quotes, total supply) via multicall to the Lens contract. Also fetches market data from the Nad.fun REST API (price, market cap, volume, holder count, ATH) with a 10-second cache.
+- **State fetcher** (`monitor/state-fetcher.ts`): Fetches on-chain token data (name, symbol, graduation status, lock status, bonding curve progress, buy/sell quotes, total supply) via multicall to the Lens contract. Also fetches market data from the nad.fun REST API (price, market cap, volume, holder count, ATH) with a 10-second cache.
 - **Quote fetcher** (`monitor/quote-fetcher.ts`): Fetches fresh quotes for a specific input amount and direction.
 - **Execution engine** (`execution/`): Router selector (bonding curve vs. DEX), slippage guard, transaction builder (encodes contract calls), and transaction executor (signs and sends via viem wallet client, waits for receipt).
 - **AI layer** (`ai/`): Groq, Claude, OpenAI, and Gemini providers (`groq.ts`, `claude.ts`, `openai.ts`, `gemini.ts`) with automatic fallback and round-robin "Auto" mode. Provides five capabilities: post-execution explanations, token analysis, strategy suggestions, pre-execution risk checks (`risk-check.ts`), and conversational chat.
 - **SSE events** (`events/`): Server-Sent Events endpoint for real-time push notifications to the frontend. Events include `order:triggered`, `order:executed`, `order:failed`, `order:expired`, and `order:aborted`.
 - **Database layer** (`db/`): Account management (wallet generation, encryption/decryption), order CRUD, execution log writes, AI config storage.
 
-**`apps/web`** -- The Next.js frontend running on port 3000. Pages include:
+**`apps/web`**: The Next.js frontend running on port 3000. Pages include:
 
-- `/` -- Home / dashboard
-- `/create` -- Create a new order
-- `/orders` -- View and manage existing orders
-- `/orderbook/[token]` -- CLOB-style orderbook for a specific token
-- `/settings` -- Agent wallet management, AI key configuration, key export
-- `/chat` -- AI conversational interface (context-aware chat with token and order data)
+- `/` - Home / dashboard
+- `/create` - Create a new order
+- `/orders` - View and manage existing orders
+- `/orderbook/[token]` - CLOB-style orderbook for a specific token
+- `/settings` - Agent wallet management, AI key configuration, key export
+- `/chat` - AI conversational interface (context-aware chat with token and order data)
 
 Uses RainbowKit for wallet connection (MetaMask, WalletConnect, etc.) with the Monad chain.
 
@@ -101,7 +101,7 @@ Agent Server (Express :3001)
     |-- Monitor Loop (every 5s)
     |     |-- Fetch active orders from MySQL
     |     |-- Multicall Lens contract for on-chain state
-    |     |-- Fetch Nad.fun API for market data
+    |     |-- Fetch nad.fun API for market data
     |     |-- Evaluate each order (deterministic)
     |     |-- AI risk check (opt-in, fail-open, blocks if confidence > 70%)
     |     |-- Execute triggered orders (sign + send tx)
@@ -137,7 +137,7 @@ Monad Blockchain (Chain ID 143)
 
 5. **Agent monitors conditions**: The monitor loop runs every 5 seconds. For each active order, it:
    - Fetches the token's on-chain state (price, progress, graduation status, lock status) via a batched multicall to the Lens contract
-   - Fetches market data from the Nad.fun REST API
+   - Fetches market data from the nad.fun REST API
    - Runs the deterministic evaluator to check if trigger conditions are met
    - Checks for order expiration
    - For TRAILING_STOP orders, updates the tracked peak price if the current price exceeds the previous peak
@@ -154,7 +154,7 @@ Monad Blockchain (Chain ID 143)
    - Writes a detailed execution log including AI explanation
    - For DCA_INTERVAL orders, re-activates the order for the next interval
 
-7. **Real-time notifications**: The user receives SSE events in their browser for each state change -- triggered, executed, failed, expired, or aborted.
+7. **Real-time notifications**: The user receives SSE events in their browser for each state change: triggered, executed, failed, expired, or aborted.
 
 ---
 
@@ -195,11 +195,11 @@ All trading decisions are **100% deterministic**. The evaluator (`evaluator.ts`)
 
 The AI layer provides five capabilities:
 
-1. **Post-execution explanations** -- After an order triggers and executes, the AI generates a natural-language explanation of why the order fired and how the trade went.
-2. **Token analysis** -- Analyzes on-chain and Nad.fun market data to provide sentiment, risk assessment, and observations about a token.
-3. **Strategy suggestions** -- Recommends trigger type, trigger value, and slippage settings for order creation based on current market conditions. Returns structured JSON that auto-fills the order creation form.
-4. **Pre-execution risk checks** -- Opt-in (via Settings). Runs between trigger evaluation and trade execution. Uses a fail-open design and only blocks execution when confidence exceeds 70%.
-5. **Conversational chat** -- Context-aware AI chat interface at `/chat` that understands the user's active orders, wallet balances, and market conditions.
+1. **Post-execution explanations**: After an order triggers and executes, the AI generates a natural-language explanation of why the order fired and how the trade went.
+2. **Token analysis**: Analyzes on-chain and nad.fun market data to provide sentiment, risk assessment, and observations about a token.
+3. **Strategy suggestions**: Recommends trigger type, trigger value, and slippage settings for order creation based on current market conditions. Returns structured JSON that auto-fills the order creation form.
+4. **Pre-execution risk checks**: Opt-in (via Settings). Runs between trigger evaluation and trade execution. Uses a fail-open design and only blocks execution when confidence exceeds 70%.
+5. **Conversational chat**: Context-aware AI chat interface at `/chat` that understands the user's active orders, wallet balances, and market conditions.
 
 ### Supported Providers
 
@@ -228,7 +228,7 @@ If all providers fail or no API keys are configured, the system returns a defaul
 ### Configuration Methods
 
 - **Environment variables**: Set `DEFAULT_GROQ_API_KEY`, `DEFAULT_CLAUDE_API_KEY`, `DEFAULT_OPENAI_API_KEY`, and/or `DEFAULT_GEMINI_API_KEY` in the `.env` file. These serve as defaults for all users who have not configured their own keys.
-- **Per-user keys**: Users can configure their own API keys via the Settings page (BYOK -- Bring Your Own Key). Per-user keys are stored in the `AiConfig` table in the database.
+- **Per-user keys**: Users can configure their own API keys via the Settings page (BYOK: Bring Your Own Key). Per-user keys are stored in the `AiConfig` table in the database.
 
 ---
 
@@ -246,11 +246,11 @@ Explanations are stored in the `aiExplanation` field of the `ExecutionLog` table
 
 ### 2. Token Analysis
 
-Accessible via `GET /ai/analyze/:token?wallet=0x...`. The AI analyzes a combination of on-chain token data (from the Lens contract) and Nad.fun market data (price, market cap, volume, holder count, ATH) to produce:
+Accessible via `GET /ai/analyze/:token?wallet=0x...`. The AI analyzes a combination of on-chain token data (from the Lens contract) and nad.fun market data (price, market cap, volume, holder count, ATH) to produce:
 
-- **Sentiment assessment** -- Bullish, bearish, or neutral based on current market signals.
-- **Risk evaluation** -- Identifies risk factors such as low liquidity, high concentration, or extreme volatility.
-- **Key observations** -- Notable data points like bonding curve progress, graduation proximity, lock status, and recent volume trends.
+- **Sentiment assessment**: Bullish, bearish, or neutral based on current market signals.
+- **Risk evaluation**: Identifies risk factors such as low liquidity, high concentration, or extreme volatility.
+- **Key observations**: Notable data points like bonding curve progress, graduation proximity, lock status, and recent volume trends.
 
 The analysis is rate limited to 10 requests per minute per IP. The response includes the analysis text, the provider used, and a structured token summary.
 
@@ -258,12 +258,12 @@ The analysis is rate limited to 10 requests per minute per IP. The response incl
 
 Accessible via `POST /ai/suggest-strategy`. Given a token address, direction (BUY/SELL), and input amount, the AI recommends order parameters:
 
-- **Trigger type** -- Which trigger condition to use (e.g., PRICE_BELOW, TRAILING_STOP).
-- **Trigger value** -- The specific threshold value for the trigger.
-- **Max slippage (bps)** -- Recommended slippage tolerance based on current market conditions.
-- **Reasoning** -- Explanation of why these parameters were chosen.
+- **Trigger type**: Which trigger condition to use (e.g., PRICE_BELOW, TRAILING_STOP).
+- **Trigger value**: The specific threshold value for the trigger.
+- **Max slippage (bps)**: Recommended slippage tolerance based on current market conditions.
+- **Reasoning**: Explanation of why these parameters were chosen.
 
-The response is structured JSON that the frontend uses to auto-fill the order creation form. The user can review and adjust the suggested values before submitting the order. The AI suggestion is advisory only -- the user retains full control over the final order parameters.
+The response is structured JSON that the frontend uses to auto-fill the order creation form. The user can review and adjust the suggested values before submitting the order. The AI suggestion is advisory only, the user retains full control over the final order parameters.
 
 ### 4. Pre-Execution Risk Check
 
@@ -285,7 +285,7 @@ Accessible via the `/chat` page in the web frontend and the `POST /ai/chat` API 
 - Strategy recommendations
 - General questions about the platform
 
-The chat is context-aware -- it has access to the user's active orders and wallet balances to provide relevant, personalized responses. Chat history is maintained **client-side only** (not stored in the database) for privacy. The endpoint is rate limited to 10 requests per minute per IP.
+The chat is context-aware: it has access to the user's active orders and wallet balances to provide relevant, personalized responses. Chat history is maintained **client-side only** (not stored in the database) for privacy. The endpoint is rate limited to 10 requests per minute per IP.
 
 ---
 
@@ -310,15 +310,15 @@ All providers implement the same interface and can be used interchangeably for a
 
 Buy triggers spend MON from the agent wallet to purchase tokens.
 
-#### 1. PRICE_BELOW -- Buy When Price Drops to Target
+#### 1. PRICE_BELOW - Buy When Price Drops to Target
 
 - **Trigger value**: Price in MON (wei format)
 - **Condition**: `currentPrice <= triggerValue`
 - **Example**: Set trigger value to `100000000000000` (0.0001 MON in wei). When the token price drops to 0.0001 MON/token or below, the agent buys.
-- **Use case**: "Buy the dip" -- accumulate tokens when price falls to a specific level.
+- **Use case**: "Buy the dip", accumulate tokens when price falls to a specific level.
 - **Notes**: Price is calculated as the cost per token based on the Lens contract's `getAmountOut` for 1 token (1e18 wei) of input.
 
-#### 2. PROGRESS_BELOW -- Buy When Bonding Curve Progress Drops
+#### 2. PROGRESS_BELOW - Buy When Bonding Curve Progress Drops
 
 - **Trigger value**: Progress in basis points (100 = 1%, 10000 = 100%)
 - **Condition**: `state.progress <= triggerValue`
@@ -326,14 +326,14 @@ Buy triggers spend MON from the agent wallet to purchase tokens.
 - **Use case**: Buy early-stage tokens before they accumulate enough liquidity to graduate.
 - **Notes**: Only meaningful for pre-graduation tokens. The progress value comes from the Lens contract's `getProgress()` function. This trigger type is hidden in the UI after a token graduates.
 
-#### 3. MCAP_BELOW -- Buy When Market Cap Drops Below Target
+#### 3. MCAP_BELOW - Buy When Market Cap Drops Below Target
 
 - **Trigger value**: Market cap in MON (wei format)
 - **Condition**: `(currentPrice * totalSupply / 1e18) <= triggerValue`
 - **Example**: Set to `5000000000000000000000` (5000 MON in wei). When the fully diluted market cap drops to 5000 MON or below, the agent buys.
 - **Use case**: Value buying based on overall market valuation rather than per-token price.
 
-#### 4. DCA_INTERVAL -- Dollar-Cost Averaging at Regular Intervals
+#### 4. DCA_INTERVAL - Dollar-Cost Averaging at Regular Intervals
 
 - **Trigger value**: Interval in milliseconds
 - **Condition**: `(now - lastExecutedAt) >= triggerValue`
@@ -349,7 +349,7 @@ Buy triggers spend MON from the agent wallet to purchase tokens.
 - **Use case**: Automated accumulation strategy that reduces timing risk by spreading purchases over time.
 - **Notes**: Unlike other triggers, DCA orders are **re-activated** after each execution. The order stays ACTIVE and continues to trigger at each interval until it expires or is cancelled. The `lastExecutedAt` timestamp is updated after each successful execution.
 
-#### 5. PRICE_DROP_PCT -- Buy After a Percentage Drop from Reference Price
+#### 5. PRICE_DROP_PCT - Buy After a Percentage Drop from Reference Price
 
 - **Trigger value**: Drop percentage in basis points (1000 = 10%, 2000 = 20%)
 - **Condition**: `currentPrice <= referencePrice * (10000 - triggerValue) / 10000`
@@ -361,14 +361,14 @@ Buy triggers spend MON from the agent wallet to purchase tokens.
 
 Sell triggers sell tokens from the agent wallet in exchange for MON.
 
-#### 1. PRICE_ABOVE -- Sell When Price Rises to Target
+#### 1. PRICE_ABOVE - Sell When Price Rises to Target
 
 - **Trigger value**: Price in MON (wei format)
 - **Condition**: `currentPrice >= triggerValue`
 - **Example**: Set to `1000000000000000` (0.001 MON in wei). When the token price reaches 0.001 MON/token, the agent sells.
 - **Use case**: Take profit at a specific price point.
 
-#### 2. PROGRESS_ABOVE -- Sell When Bonding Curve Progress Rises
+#### 2. PROGRESS_ABOVE - Sell When Bonding Curve Progress Rises
 
 - **Trigger value**: Progress in basis points
 - **Condition**: `state.progress >= triggerValue`
@@ -376,21 +376,21 @@ Sell triggers sell tokens from the agent wallet in exchange for MON.
 - **Use case**: Sell before graduation, anticipating a potential dump at the graduation event.
 - **Notes**: Only works for pre-graduation tokens.
 
-#### 3. POST_GRADUATION -- Sell After Token Graduates to DEX
+#### 3. POST_GRADUATION - Sell After Token Graduates to DEX
 
 - **Trigger value**: `0` (automatic, no value needed)
 - **Condition**: `state.isGraduated === true`
 - **Example**: The agent automatically sells when the token migrates from the bonding curve to the DEX.
 - **Use case**: Exit position at the graduation event.
 
-#### 4. MCAP_ABOVE -- Sell When Market Cap Rises Above Target
+#### 4. MCAP_ABOVE - Sell When Market Cap Rises Above Target
 
 - **Trigger value**: Market cap in MON (wei format)
 - **Condition**: `(currentPrice * totalSupply / 1e18) >= triggerValue`
 - **Example**: Set to `50000000000000000000000` (50000 MON in wei). When the fully diluted market cap exceeds 50000 MON, the agent sells.
 - **Use case**: Take profit based on market valuation milestones.
 
-#### 5. TRAILING_STOP -- Sell After Price Drops a Percentage from Peak
+#### 5. TRAILING_STOP - Sell After Price Drops a Percentage from Peak
 
 - **Trigger value**: Drop percentage in basis points (e.g., 2000 = 20%)
 - **Condition**: `currentPrice <= peakPrice * (10000 - triggerValue) / 10000`
@@ -398,7 +398,7 @@ Sell triggers sell tokens from the agent wallet in exchange for MON.
 - **Use case**: Protect gains while allowing upside. The trailing stop "follows" the price up and only triggers on a pullback.
 - **Notes**: The `peakPrice` is continuously updated by the monitor loop. Every 5 seconds, if the current price exceeds the stored peak, the peak is updated in the database. This means the stop level automatically ratchets higher as the price rises.
 
-#### 6. TAKE_PROFIT -- Sell After Price Gains a Percentage from Reference
+#### 6. TAKE_PROFIT - Sell After Price Gains a Percentage from Reference
 
 - **Trigger value**: Gain percentage in basis points (e.g., 5000 = 50%, 10000 = 100%)
 - **Condition**: `currentPrice >= referencePrice * (10000 + triggerValue) / 10000`
@@ -496,7 +496,7 @@ All endpoints are served by the Express agent server on port 3001.
 
 | Method | Path | Rate Limit | Description |
 |--------|------|------------|-------------|
-| `POST` | `/account` | Global (100/min) | Create an agent wallet. Body: `{ walletAddress: "0x..." }`. Returns agent address and metadata. Idempotent -- returns existing account if already created. |
+| `POST` | `/account` | Global (100/min) | Create an agent wallet. Body: `{ walletAddress: "0x..." }`. Returns agent address and metadata. Idempotent: returns existing account if already created. |
 | `GET` | `/account?wallet=0x...` | Global (100/min) | Get account info. Returns wallet address, agent address, auto-execute flag, creation date. |
 | `GET` | `/account/balance?wallet=0x...&token=0x...` | Global (100/min) | Get agent wallet balances. Returns MON balance (raw and formatted) and optionally the token balance if `token` query param is provided. |
 | `POST` | `/account/export-key` | Sensitive (5/min) | Export the agent wallet's private key. Body: `{ walletAddress, message, signature }`. Requires a valid ECDSA signature from the user's wallet with a timestamp within the last 5 minutes. |
@@ -522,7 +522,7 @@ All endpoints are served by the Express agent server on port 3001.
 
 | Method | Path | Description |
 |--------|------|-------------|
-| `GET` | `/token/:address` | Get comprehensive token state. Returns on-chain data (name, symbol, graduation status, lock status, progress, total supply, buy/sell quotes) and Nad.fun API market data (price, market cap, volume, holders, ATH). |
+| `GET` | `/token/:address` | Get comprehensive token state. Returns on-chain data (name, symbol, graduation status, lock status, progress, total supply, buy/sell quotes) and nad.fun API market data (price, market cap, volume, holders, ATH). |
 
 ### Quote
 
@@ -562,9 +562,9 @@ The agent fetches the following data directly from the blockchain using the Lens
 
 All on-chain data is fetched using viem's `multicall`, which batches multiple contract calls into a single RPC request for efficiency.
 
-### Nad.fun REST API Data
+### nad.fun REST API Data
 
-The agent also fetches market data from the Nad.fun REST API at `https://api.nad.fun/`:
+The agent also fetches market data from the nad.fun REST API at `https://api.nad.fun/`:
 
 - **Price** (MON and USD)
 - **Market cap**
@@ -721,7 +721,7 @@ Rate limit state is stored in memory with automatic cleanup of stale entries eve
 
 ### Additional Security Measures
 
-- **CORS**: Enabled via the `cors` middleware (all origins allowed -- should be restricted in production).
+- **CORS**: Enabled via the `cors` middleware (all origins allowed, should be restricted in production).
 - **Transaction deadline**: All on-chain transactions include a deadline (default 300 seconds / 5 minutes) to prevent stale transactions from executing.
 - **Slippage protection**: Every trade validates that the fresh quote does not deviate from the expected output by more than the user's `maxSlippageBps`. If slippage exceeds the threshold, the execution is aborted and logged.
 - **Zero-quote protection**: If a fresh quote returns 0 `amountOut`, the execution is aborted (indicates invalid token state or a failed quote).
@@ -778,7 +778,7 @@ Block Explorer:   https://monadscan.com
 
 ### Data Accuracy
 
-- **Market data lag**: Market data from the Nad.fun REST API is cached for 10 seconds and may lag a few seconds behind the actual on-chain state. On-chain data fetched via the Lens contract is more current but still subject to RPC latency.
+- **Market data lag**: Market data from the nad.fun REST API is cached for 10 seconds and may lag a few seconds behind the actual on-chain state. On-chain data fetched via the Lens contract is more current but still subject to RPC latency.
 - **Token state unavailability**: If the Lens contract multicall fails for a token (e.g., the token address is invalid or the RPC is overloaded), the evaluator skips that order in the current cycle rather than making incorrect trading decisions.
 - **Graduation transitions**: When a token graduates from the bonding curve to the DEX mid-monitoring, certain trigger types (PROGRESS_BELOW, PROGRESS_ABOVE for buys) are automatically aborted as they are no longer valid. The agent handles this gracefully.
 

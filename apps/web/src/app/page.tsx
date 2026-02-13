@@ -27,10 +27,10 @@ export default function DashboardPage() {
     return (
       <div className="text-center py-20 space-y-6">
         <h1 className="text-4xl font-bold text-white">
-          Nad.fun Synthetic Limit Orders
+          Synthetic Order Flow
         </h1>
         <p className="text-gray-400 text-lg max-w-xl mx-auto">
-          AI-agent powered limit orders for Nad.fun tokens on Monad.
+          AI-agent powered limit orders for tokens on Monad.
           Create an AI agent with its own wallet that auto-executes trades
           when your conditions are met.
         </p>

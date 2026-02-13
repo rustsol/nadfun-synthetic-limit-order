@@ -1,6 +1,6 @@
-# Nad.fun Synthetic Limit Orders
+# Synthetic Order Flow
 
-### Autonomous AI-Agent Powered Limit Orders for Nad.fun Tokens on Monad
+### Autonomous AI-Agent Powered Limit Orders for Tokens on Monad
 
 > Built for the [Moltiverse Hackathon](https://moltiverse.dev) | Agent Track
 
@@ -10,11 +10,11 @@
 
 ## The Problem
 
-[Nad.fun](https://nad.fun) is the leading meme token launchpad on Monad with bonding curve mechanics — but it **does not support limit orders**. Traders must manually watch prices and execute at the right moment, or miss their target entirely.
+[nad.fun](https://nad.fun) is the leading meme token launchpad on Monad with bonding curve mechanics, but it **does not support limit orders**. Traders must manually watch prices and execute at the right moment, or miss their target entirely.
 
 ## The Solution
 
-A fully autonomous limit order platform that sits on top of Nad.fun. Each user gets a dedicated **AI agent wallet** that continuously monitors market conditions and **auto-executes trades on-chain** when user-defined triggers are met.
+A fully autonomous limit order platform that sits on top of nad.fun. Each user gets a dedicated **AI agent wallet** that continuously monitors market conditions and **auto-executes trades on-chain** when user-defined triggers are met.
 
 No manual signing. No babysitting charts. Set your conditions, fund your agent wallet, and walk away.
 
@@ -38,18 +38,18 @@ No manual signing. No babysitting charts. Set your conditions, fund your agent w
 
 ### AI-Powered Trading Intelligence
 - **4 AI providers** with auto-rotation fallback: Groq (LPU), Claude, GPT-4o, Gemini
-- **BYOK-only** — users bring their own API keys via Settings page (no server-side defaults)
-- **AI Chat** (`/chat`) — conversational trading assistant that can create and cancel orders
-- **AI Token Analysis** — on-demand market data analysis for any token
-- **AI Strategy Suggestions** — AI recommends optimal trigger type/value
-- **AI Risk Check** — opt-in pre-execution risk assessment
-- **AI Explanations** — human-readable explanations of every executed trade
+- **BYOK-only**: users bring their own API keys via Settings page (no server-side defaults)
+- **AI Chat** (`/chat`) - conversational trading assistant that can create and cancel orders
+- **AI Token Analysis** - on-demand market data analysis for any token
+- **AI Strategy Suggestions** - AI recommends optimal trigger type/value
+- **AI Risk Check** - opt-in pre-execution risk assessment
+- **AI Explanations** - human-readable explanations of every executed trade
 
 ### Platform Features
 - **Auto-execution** via encrypted agent wallets (no manual signing)
 - **Real-time SSE** push notifications from agent to frontend
 - **CLOB-style orderbook** view per token
-- **Nad.fun market data** integration (price, mcap, volume, holders, ATH)
+- **nad.fun market data** integration (price, mcap, volume, holders, ATH)
 - **Encrypted agent keys** (AES-256-CBC + scrypt, random per-key salt)
 - **Wallet signature verification** for sensitive operations
 - **Rate limiting** on all endpoints
@@ -73,7 +73,7 @@ User Wallet (MetaMask / RainbowKit)
 [Express Agent :3001]
     |-- Monitor Loop (5s interval)
     |   |-- Fetch on-chain state (Lens multicall)
-    |   |-- Fetch Nad.fun API data (price, mcap, volume)
+    |   |-- Fetch nad.fun API data (price, mcap, volume)
     |   |-- Evaluate 12 trigger conditions
     |   |-- AI Risk Check (opt-in, fail-open)
     |   +-- Auto-execute via agent wallet
@@ -156,14 +156,14 @@ nadfun-synthetic-limit-order/
 
 ## How It Works
 
-1. **Connect wallet** — MetaMask via RainbowKit
-2. **Create agent wallet** — system generates an encrypted wallet for auto-execution
-3. **Fund agent wallet** — send MON to cover gas + trade amounts
-4. **Create orders** — via the form UI or AI chat assistant
-5. **Monitor loop** — agent checks all active orders every 5 seconds
-6. **Trigger evaluation** — deterministic comparison against on-chain state
-7. **Auto-execute** — agent wallet signs and submits the transaction on Monad
-8. **Real-time updates** — SSE pushes status changes to frontend instantly
+1. **Connect wallet** - MetaMask via RainbowKit
+2. **Create agent wallet** - system generates an encrypted wallet for auto-execution
+3. **Fund agent wallet** - send MON to cover gas + trade amounts
+4. **Create orders** - via the form UI or AI chat assistant
+5. **Monitor loop** - agent checks all active orders every 5 seconds
+6. **Trigger evaluation** - deterministic comparison against on-chain state
+7. **Auto-execute** - agent wallet signs and submits the transaction on Monad
+8. **Real-time updates** - SSE pushes status changes to frontend instantly
 
 ## Contract Addresses (Monad Mainnet)
 
@@ -180,7 +180,7 @@ nadfun-synthetic-limit-order/
 - Wallet signature verification (ECDSA + 5-minute expiry) for sensitive operations
 - Server-side validation on all order parameters (address format, direction, trigger type, amounts, expiry, slippage range)
 - Rate limiting on all endpoints with stricter limits on sensitive operations
-- AI risk check is opt-in and fail-open — deterministic logic always works, AI is a safety layer on top
+- AI risk check is opt-in and fail-open: deterministic logic always works, AI is a safety layer on top
 
 ## Testing
 

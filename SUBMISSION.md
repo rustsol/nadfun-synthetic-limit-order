@@ -4,7 +4,7 @@
 
 ---
 
-**Title:** Nad.fun Synthetic Limit Orders — Autonomous AI Agent for Limit Order Trading on Nad.fun
+**Title:** Synthetic Order Flow: Autonomous AI Agent for Limit Order Trading on Monad
 
 **Track:** Agent
 
@@ -12,15 +12,15 @@
 
 ### What We Built
 
-Nad.fun doesn't have limit orders. We fixed that.
+nad.fun doesn't have limit orders. We fixed that.
 
-**Nad.fun Synthetic Limit Orders** is a fully autonomous trading agent that adds limit order functionality to every token on Nad.fun. Users set their conditions, fund an agent wallet, and the AI agent monitors prices 24/7 and auto-executes trades on-chain when triggers are met.
+**Synthetic Order Flow** is a fully autonomous trading agent that adds limit order functionality to every token on nad.fun. Users set their conditions, fund an agent wallet, and the AI agent monitors prices 24/7 and auto-executes trades on-chain when triggers are met.
 
 No manual signing. No watching charts. The agent handles everything.
 
 ### The Problem
 
-Nad.fun is the leading token launchpad on Monad, but it only supports market orders. If you want to buy CHOG at a specific market cap, or sell when your token graduates to DEX, or DCA into a position at regular intervals — you can't. You have to sit and watch.
+nad.fun is the leading token launchpad on Monad, but it only supports market orders. If you want to buy CHOG at a specific market cap, or sell when your token graduates to DEX, or DCA into a position at regular intervals, you can't. You have to sit and watch.
 
 ### How It Works
 
@@ -36,18 +36,18 @@ Nad.fun is the leading token launchpad on Monad, but it only supports market ord
 **Buy triggers:** Price Below, Market Cap Below, Progress Below, DCA Interval, Price Drop %
 **Sell triggers:** Price Above, Market Cap Above, Progress Above, Post-Graduation, Trailing Stop, Take Profit, Stop Loss
 
-Most limit order platforms offer 2-3 trigger types. We built 12 — covering every scenario from simple price targets to DCA schedules to trailing stops to post-graduation sells.
+Most limit order platforms offer 2-3 trigger types. We built 12, covering every scenario from simple price targets to DCA schedules to trailing stops to post-graduation sells.
 
 ### AI-Powered Intelligence
 
 The platform integrates 4 AI providers (Groq LPU, Claude, GPT-4o, Gemini) with automatic fallback:
 
-- **AI Chat** — Talk to the agent in natural language. "Buy 0.01 MON of CHOG when market cap drops below 8.65k" and it creates the order for you.
-- **AI Token Analysis** — Get instant analysis of any token's market data, risk level, and key observations.
-- **AI Strategy Suggestions** — The AI recommends optimal trigger types and values based on current market conditions.
-- **AI Risk Check** — Optional pre-execution risk assessment before auto-executing trades.
-- **AI Explanations** — Every executed trade gets a human-readable explanation of why it triggered.
-- **BYOK-only** — No server-side API keys. Users bring their own keys for full control and privacy.
+- **AI Chat**: Talk to the agent in natural language. "Buy 0.01 MON of CHOG when market cap drops below 8.65k" and it creates the order for you.
+- **AI Token Analysis**: Get instant analysis of any token's market data, risk level, and key observations.
+- **AI Strategy Suggestions**: The AI recommends optimal trigger types and values based on current market conditions.
+- **AI Risk Check**: Optional pre-execution risk assessment before auto-executing trades.
+- **AI Explanations**: Every executed trade gets a human-readable explanation of why it triggered.
+- **BYOK-only**: No server-side API keys. Users bring their own keys for full control and privacy.
 
 ### Technical Architecture
 
@@ -62,13 +62,13 @@ The platform integrates 4 AI providers (Groq LPU, Claude, GPT-4o, Gemini) with a
 
 ### What Makes This Different
 
-1. **12 trigger types** — most platforms do 2-3. We cover every trading scenario.
-2. **Fully autonomous** — no MetaMask popups. Agent wallet handles everything.
-3. **AI-native** — not a chatbot bolted on. AI is woven into analysis, strategy, risk checking, execution explanations, and order creation.
-4. **4 AI providers with auto-fallback** — if Groq is down, it tries Claude, then GPT, then Gemini. Always available.
-5. **BYOK-only** — zero server-side keys. Users own their AI keys completely. No vendor lock-in, no shared quotas.
-6. **CLOB-style orderbook** — see all orders for any token in a traditional orderbook format.
-7. **28 automated tests** — comprehensive paper trading test suite covering all triggers, validation, and lifecycle.
+1. **12 trigger types** - most platforms do 2-3. We cover every trading scenario.
+2. **Fully autonomous** - no MetaMask popups. Agent wallet handles everything.
+3. **AI-native** - not a chatbot bolted on. AI is woven into analysis, strategy, risk checking, execution explanations, and order creation.
+4. **4 AI providers with auto-fallback** - if Groq is down, it tries Claude, then GPT, then Gemini. Always available.
+5. **BYOK-only** - zero server-side keys. Users own their AI keys completely. No vendor lock-in, no shared quotas.
+6. **CLOB-style orderbook** - see all orders for any token in a traditional orderbook format.
+7. **28 automated tests** - comprehensive paper trading test suite covering all triggers, validation, and lifecycle.
 
 ### Links
 
@@ -129,7 +129,7 @@ cp .env.example .env
 #   DATABASE_URL=mysql://user:password@localhost:3306/nadfun_limit_orders
 #   MONAD_RPC_URL=https://rpc.monad.xyz
 #   AGENT_ENCRYPTION_KEY=<generate with: node -e "console.log(require('crypto').randomBytes(32).toString('hex'))">
-#   AI keys are BYOK — users configure via Settings page, no server defaults needed
+#   AI keys are BYOK, users configure via Settings page, no server defaults needed
 
 # Generate Prisma client and push schema
 cd packages/db && npx prisma generate && npx prisma db push && cd ../..
@@ -151,6 +151,6 @@ pm2 start "npx tsx apps/agent/src/index.ts" --name nadfun-agent
 | `AGENT_ENCRYPTION_KEY` | Yes | 32+ byte hex string for key encryption |
 | `AGENT_PORT` | No | Agent port (default: 3001) |
 | `MONITOR_INTERVAL_MS` | No | Monitor loop interval (default: 5000) |
-| | | *AI keys are BYOK — users configure via Settings page* |
+| | | *AI keys are BYOK, users configure via Settings page* |
 | `NEXT_PUBLIC_AGENT_URL` | Yes | Agent URL for frontend |
 | `NEXT_PUBLIC_WALLETCONNECT_PROJECT_ID` | No | WalletConnect project ID |

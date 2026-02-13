@@ -9,7 +9,7 @@ export function Header() {
       <div className="max-w-7xl mx-auto px-4 py-3 flex items-center justify-between">
         <div className="flex items-center gap-8">
           <Link href="/" className="text-xl font-bold text-monad-500">
-            Nad.fun Limits
+            Synthetic Order Flow
           </Link>
           <nav className="hidden md:flex items-center gap-6">
             <Link href="/" className="text-sm text-gray-400 hover:text-white transition">
@@ -21,11 +21,14 @@ export function Header() {
             <Link href="/orders" className="text-sm text-gray-400 hover:text-white transition">
               My Orders
             </Link>
-            <Link href="/orderbook/0xffC86Ab0C36B0728BbF52164f6319762DA867777" className="text-sm text-gray-400 hover:text-white transition">
+            <Link href="/orderbook" className="text-sm text-gray-400 hover:text-white transition">
               Orderbook
             </Link>
             <Link href="/chat" className="text-sm text-monad-400 hover:text-monad-300 font-medium transition">
               AI Chat
+            </Link>
+            <Link href="/guide" className="text-sm text-gray-400 hover:text-white transition">
+              Guide
             </Link>
             <Link href="/settings" className="text-sm text-gray-400 hover:text-white transition">
               Settings

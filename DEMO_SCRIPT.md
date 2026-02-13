@@ -8,7 +8,7 @@ Record your screen with voiceover. Keep it fast-paced.
 
 **Show:** Landing page at localhost:3000
 
-**Say:** "This is Nad.fun Synthetic Limit Orders — an autonomous AI agent that adds limit order trading to every Nad.fun token on Monad."
+**Say:** "This is Synthetic Order Flow: an autonomous AI agent that adds limit order trading to every nad.fun token on Monad."
 
 ---
 
@@ -16,7 +16,7 @@ Record your screen with voiceover. Keep it fast-paced.
 
 **Action:** Click "Connect Wallet" -> Select MetaMask -> Approve
 
-**Say:** "First, connect your wallet. The platform creates a dedicated agent wallet for you — encrypted and managed by the system."
+**Say:** "First, connect your wallet. The platform creates a dedicated agent wallet for you, encrypted and managed by the system."
 
 **Show:** Settings page briefly showing agent wallet address + MON balance
 
@@ -31,7 +31,7 @@ Record your screen with voiceover. Keep it fast-paced.
 - Amount: 0.01 MON
 - Click "Create Order"
 
-**Say:** "Creating orders is simple. Pick your token, choose from 12 trigger types — price targets, market cap, DCA intervals, trailing stops, take profit, stop loss — set your parameters, and submit. The agent monitors every 5 seconds and auto-executes when conditions are met."
+**Say:** "Creating orders is simple. Pick your token, choose from 12 trigger types: price targets, market cap, DCA intervals, trailing stops, take profit, stop loss, set your parameters, and submit. The agent monitors every 5 seconds and auto-executes when conditions are met."
 
 **Show:** Green success banner
 
@@ -48,7 +48,7 @@ Record your screen with voiceover. Keep it fast-paced.
 
 **Show:** AI creates the order, green banner appears
 
-**Say:** "You can also create orders through the AI chat. Just describe what you want in natural language. The AI understands all 12 trigger types, converts your intent to exact parameters, and creates the order after confirmation. It supports 4 AI providers — Groq, Claude, GPT-4o, and Gemini — with automatic fallback."
+**Say:** "You can also create orders through the AI chat. Just describe what you want in natural language. The AI understands all 12 trigger types, converts your intent to exact parameters, and creates the order after confirmation. It supports 4 AI providers: Groq, Claude, GPT-4o, and Gemini, with automatic fallback."
 
 ---
 

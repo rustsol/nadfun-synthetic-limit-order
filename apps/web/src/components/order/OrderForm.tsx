@@ -60,7 +60,7 @@ export function OrderForm({ token, onCreated }: Props) {
   const [hasAccount, setHasAccount] = useState(false);
   const [aiSuggesting, setAiSuggesting] = useState(false);
   const [aiSuggestion, setAiSuggestion] = useState<string>('');
-  // Use Nad.fun API market data (price, market cap, volume, holders, ATH)
+  // Use Synthetic Order Flow API market data (price, market cap, volume, holders, ATH)
   const tokenMetrics = useMemo(() => {
     const m = token.nadMarket;
     if (!m) {
@@ -339,7 +339,7 @@ export function OrderForm({ token, onCreated }: Props) {
     <form onSubmit={handleSubmit} className="bg-gray-900 border border-gray-800 rounded-xl p-6 space-y-5">
       <h3 className="text-lg font-bold text-white">Create Limit Order</h3>
 
-      {/* Current Price & Market Cap (from Nad.fun API) */}
+      {/* Current Price & Market Cap (from Synthetic Order Flow API) */}
       {tokenMetrics.priceMon > 0 && (
         <div className="bg-gray-800/50 rounded-lg p-3 space-y-1">
           <div className="flex justify-between text-xs">

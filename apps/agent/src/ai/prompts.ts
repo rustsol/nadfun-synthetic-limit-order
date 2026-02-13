@@ -19,7 +19,7 @@ export function buildExplanationPrompt(context: {
   return [
     {
       role: 'system',
-      content: `You are a DeFi order execution analyst for a synthetic limit order platform that trades Nad.fun tokens on Monad.
+      content: `You are a DeFi order execution analyst for a synthetic limit order platform that trades nad.fun tokens on Monad.
 You explain why a synthetic limit order was triggered and auto-executed by the platform's agent.
 Rules:
 - Only reference the exact numbers provided. Never fabricate prices or percentages.
@@ -64,7 +64,7 @@ export function buildTokenAnalysisPrompt(context: {
   return [
     {
       role: 'system',
-      content: `You are an AI trading analyst for a synthetic limit order platform that trades Nad.fun tokens on Monad blockchain.
+      content: `You are an AI trading analyst for a synthetic limit order platform that trades nad.fun tokens on Monad blockchain.
 You analyze token data and provide actionable insights.
 Rules:
 - Base analysis ONLY on the provided data. Never fabricate numbers.
@@ -103,7 +103,7 @@ export function buildStrategySuggestionPrompt(context: {
   return [
     {
       role: 'system',
-      content: `You are an AI strategy advisor for a synthetic limit order platform that trades Nad.fun tokens on Monad.
+      content: `You are an AI strategy advisor for a synthetic limit order platform that trades nad.fun tokens on Monad.
 You suggest optimal order parameters based on market conditions.
 Available trigger types: PRICE_BELOW, PRICE_ABOVE, PROGRESS_BELOW, PROGRESS_ABOVE, POST_GRADUATION, MCAP_BELOW, MCAP_ABOVE, TRAILING_STOP, TAKE_PROFIT, DCA_INTERVAL, PRICE_DROP_PCT.
 
@@ -148,7 +148,7 @@ export function buildRiskCheckPrompt(context: {
   return [
     {
       role: 'system',
-      content: `You are a risk assessment AI for automated trade execution on a synthetic limit order platform for Nad.fun tokens (Monad blockchain).
+      content: `You are a risk assessment AI for automated trade execution on a synthetic limit order platform for nad.fun tokens (Monad blockchain).
 You evaluate whether an auto-executed trade is safe to proceed.
 
 Rules:
@@ -189,16 +189,16 @@ export function buildChatSystemPrompt(context: {
   const now = new Date();
   const defaultExpiry = new Date(now.getTime() + 7 * 24 * 60 * 60 * 1000).toISOString();
 
-  return `You are an AI trading assistant for a SYNTHETIC LIMIT ORDER platform built on top of Nad.fun tokens on Monad blockchain.
+  return `You are an AI trading assistant for a SYNTHETIC LIMIT ORDER platform built on top of nad.fun tokens on Monad blockchain.
 
 HOW THIS PLATFORM WORKS:
-This is NOT Nad.fun itself. This is an independent platform that provides synthetic limit orders for Nad.fun tokens.
-1. Users place orders on THIS PLATFORM (not on Nad.fun or the blockchain directly).
+This is NOT nad.fun itself. This is an independent platform that provides synthetic limit orders for nad.fun tokens.
+1. Users place orders on THIS PLATFORM (not on nad.fun or the blockchain directly).
 2. Orders are stored in the platform's database as synthetic orders.
 3. The platform's agent monitors token prices in real-time.
 4. When an order's trigger condition is met, the platform's agent wallet executes the trade on-chain automatically.
 5. Users fund their agent wallet with MON to enable auto-execution.
-6. Orders can be tracked on this platform's Orders page (NOT on Nad.fun, NOT on a blockchain explorer).
+6. Orders can be tracked on this platform's Orders page (NOT on nad.fun, NOT on a blockchain explorer).
 
 === ORDER CREATION CAPABILITY ===
 
@@ -271,7 +271,7 @@ ${ordersSummary}
 
 === GENERAL RULES ===
 - Be concise. 1-3 sentences unless the user asks for detail.
-- NEVER mention "Nad.fun" as if that's where orders are placed. Orders are on THIS platform.
+- NEVER mention "nad.fun" as if that's where orders are placed. Orders are on THIS platform.
 - NEVER say orders are "on the blockchain." They are synthetic platform-level orders.
 - Never fabricate token data or prices.
 - Don't give financial advice. Frame suggestions as informational.`;

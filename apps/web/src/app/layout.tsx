@@ -4,8 +4,8 @@ import { Header } from '@/components/layout/Header';
 import './globals.css';
 
 export const metadata: Metadata = {
-  title: 'Nad.fun Synthetic Limit Orders',
-  description: 'AI-agent powered synthetic limit orders for Nad.fun tokens on Monad',
+  title: 'Synthetic Order Flow',
+  description: 'AI-agent powered synthetic limit orders for tokens on Monad',
 };
 
 export default function RootLayout({
