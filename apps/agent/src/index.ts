@@ -2,7 +2,7 @@ import 'dotenv/config';
 import { createServer } from './server.js';
 import { startMonitorLoop } from './monitor/loop.js';
 
-const PORT = parseInt(process.env.AGENT_PORT || '3001');
+const PORT = parseInt(process.env.PORT || process.env.AGENT_PORT || '3001');
 
 const app = createServer();
 
