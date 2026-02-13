@@ -25,7 +25,9 @@ export function evaluateOrder(order: Order, state: TokenChainState): EvalResult 
     };
   }
 
-  if (order.direction === 'BUY' && state.isLocked) {
+  // Only block on isLocked if the token has NOT graduated.
+  // Graduated tokens show isLocked from the bonding curve but trade freely on DEX.
+  if (order.direction === 'BUY' && state.isLocked && !state.isGraduated) {
     return {
       triggered: false,
       reason: 'Token is locked — buy orders cannot execute',
