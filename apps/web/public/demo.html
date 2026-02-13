@@ -1,0 +1,748 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Synthetic Order Flow - Demo</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500&display=swap');
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  :root {
+    --bg: #0a0a0f;
+    --card: #111118;
+    --border: #1e1e2e;
+    --purple: #7c3aed;
+    --purple-glow: rgba(124, 58, 237, 0.3);
+    --green: #22c55e;
+    --red: #ef4444;
+    --blue: #3b82f6;
+    --yellow: #eab308;
+    --text: #e2e8f0;
+    --muted: #64748b;
+  }
+
+  body {
+    font-family: 'Inter', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    overflow: hidden;
+    width: 1280px;
+    height: 720px;
+    position: relative;
+  }
+
+  /* Slide system */
+  .slide {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding: 60px 80px;
+    opacity: 0;
+    transform: translateY(30px);
+    animation-fill-mode: forwards;
+    animation-timing-function: cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  /* Background grid */
+  .bg-grid {
+    position: fixed;
+    inset: 0;
+    background-image:
+      linear-gradient(rgba(124,58,237,0.03) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(124,58,237,0.03) 1px, transparent 1px);
+    background-size: 60px 60px;
+    z-index: 0;
+  }
+
+  .bg-glow {
+    position: fixed;
+    width: 600px;
+    height: 600px;
+    border-radius: 50%;
+    background: radial-gradient(circle, var(--purple-glow), transparent 70%);
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 0;
+    animation: pulse-glow 4s ease-in-out infinite;
+  }
+
+  @keyframes pulse-glow {
+    0%, 100% { opacity: 0.3; transform: translate(-50%, -50%) scale(1); }
+    50% { opacity: 0.6; transform: translate(-50%, -50%) scale(1.1); }
+  }
+
+  .slide > * { position: relative; z-index: 1; }
+
+  /* Timing: each slide ~5s visible */
+  /* S1: 0-5s, S2: 5-10s, S3: 10-16s, S4: 16-22s, S5: 22-28s, S6: 28-34s, S7: 34-40s, S8: 40-46s, S9: 46-52s */
+
+  #s1 { animation: slide-in 0.8s 0.3s forwards, slide-out 0.6s 4.5s forwards; }
+  #s2 { animation: slide-in 0.8s 5.2s forwards, slide-out 0.6s 10s forwards; }
+  #s3 { animation: slide-in 0.8s 10.7s forwards, slide-out 0.6s 16s forwards; }
+  #s4 { animation: slide-in 0.8s 16.7s forwards, slide-out 0.6s 22s forwards; }
+  #s5 { animation: slide-in 0.8s 22.7s forwards, slide-out 0.6s 28s forwards; }
+  #s6 { animation: slide-in 0.8s 28.7s forwards, slide-out 0.6s 34s forwards; }
+  #s7 { animation: slide-in 0.8s 34.7s forwards, slide-out 0.6s 40s forwards; }
+  #s8 { animation: slide-in 0.8s 40.7s forwards, slide-out 0.6s 46s forwards; }
+  #s9 { animation: slide-in 0.8s 46.7s forwards; }
+
+  @keyframes slide-in {
+    from { opacity: 0; transform: translateY(30px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  @keyframes slide-out {
+    from { opacity: 1; transform: translateY(0); }
+    to { opacity: 0; transform: translateY(-30px); }
+  }
+
+  /* Staggered children */
+  .stagger > *:nth-child(1) { animation: fade-up 0.6s both; animation-delay: inherit; }
+  .stagger > *:nth-child(2) { animation: fade-up 0.6s both; }
+  .stagger > *:nth-child(3) { animation: fade-up 0.6s both; }
+  .stagger > *:nth-child(4) { animation: fade-up 0.6s both; }
+  .stagger > *:nth-child(5) { animation: fade-up 0.6s both; }
+  .stagger > *:nth-child(6) { animation: fade-up 0.6s both; }
+
+  #s1 .stagger > *:nth-child(1) { animation-delay: 0.5s; }
+  #s1 .stagger > *:nth-child(2) { animation-delay: 0.9s; }
+  #s1 .stagger > *:nth-child(3) { animation-delay: 1.3s; }
+  #s1 .stagger > *:nth-child(4) { animation-delay: 1.7s; }
+
+  #s2 .stagger > *:nth-child(1) { animation-delay: 5.4s; }
+  #s2 .stagger > *:nth-child(2) { animation-delay: 5.8s; }
+  #s2 .stagger > *:nth-child(3) { animation-delay: 6.2s; }
+  #s2 .stagger > *:nth-child(4) { animation-delay: 6.6s; }
+
+  #s3 .stagger > *:nth-child(1) { animation-delay: 10.9s; }
+  #s3 .stagger > *:nth-child(2) { animation-delay: 11.3s; }
+  #s3 .stagger > *:nth-child(3) { animation-delay: 11.7s; }
+  #s3 .stagger > *:nth-child(4) { animation-delay: 12.1s; }
+  #s3 .stagger > *:nth-child(5) { animation-delay: 12.5s; }
+  #s3 .stagger > *:nth-child(6) { animation-delay: 12.9s; }
+
+  #s4 .stagger > *:nth-child(1) { animation-delay: 16.9s; }
+  #s4 .stagger > *:nth-child(2) { animation-delay: 17.3s; }
+  #s4 .stagger > *:nth-child(3) { animation-delay: 17.7s; }
+
+  #s5 .stagger > *:nth-child(1) { animation-delay: 22.9s; }
+  #s5 .stagger > *:nth-child(2) { animation-delay: 23.3s; }
+  #s5 .stagger > *:nth-child(3) { animation-delay: 23.7s; }
+  #s5 .stagger > *:nth-child(4) { animation-delay: 24.1s; }
+  #s5 .stagger > *:nth-child(5) { animation-delay: 24.5s; }
+
+  #s6 .stagger > *:nth-child(1) { animation-delay: 28.9s; }
+  #s6 .stagger > *:nth-child(2) { animation-delay: 29.3s; }
+  #s6 .stagger > *:nth-child(3) { animation-delay: 29.7s; }
+  #s6 .stagger > *:nth-child(4) { animation-delay: 30.1s; }
+  #s6 .stagger > *:nth-child(5) { animation-delay: 30.5s; }
+
+  #s7 .stagger > *:nth-child(1) { animation-delay: 34.9s; }
+  #s7 .stagger > *:nth-child(2) { animation-delay: 35.3s; }
+  #s7 .stagger > *:nth-child(3) { animation-delay: 35.7s; }
+  #s7 .stagger > *:nth-child(4) { animation-delay: 36.1s; }
+
+  #s8 .stagger > *:nth-child(1) { animation-delay: 40.9s; }
+  #s8 .stagger > *:nth-child(2) { animation-delay: 41.3s; }
+  #s8 .stagger > *:nth-child(3) { animation-delay: 41.7s; }
+  #s8 .stagger > *:nth-child(4) { animation-delay: 42.1s; }
+
+  #s9 .stagger > *:nth-child(1) { animation-delay: 46.9s; }
+  #s9 .stagger > *:nth-child(2) { animation-delay: 47.3s; }
+  #s9 .stagger > *:nth-child(3) { animation-delay: 47.7s; }
+  #s9 .stagger > *:nth-child(4) { animation-delay: 48.1s; }
+
+  @keyframes fade-up {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  /* Typography */
+  .title { font-size: 52px; font-weight: 800; line-height: 1.1; text-align: center; }
+  .title .purple { color: var(--purple); }
+  .subtitle { font-size: 22px; color: var(--muted); text-align: center; margin-top: 16px; font-weight: 400; }
+  .section-title { font-size: 38px; font-weight: 700; text-align: center; margin-bottom: 10px; }
+  .section-sub { font-size: 18px; color: var(--muted); text-align: center; margin-bottom: 30px; }
+
+  /* Badge */
+  .badge {
+    display: inline-block;
+    padding: 6px 18px;
+    border-radius: 100px;
+    font-size: 13px;
+    font-weight: 600;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    background: rgba(124,58,237,0.15);
+    color: var(--purple);
+    border: 1px solid rgba(124,58,237,0.3);
+    margin-bottom: 20px;
+  }
+
+  /* Cards */
+  .card-row {
+    display: flex;
+    gap: 20px;
+    width: 100%;
+    justify-content: center;
+    flex-wrap: wrap;
+  }
+
+  .card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 24px;
+    flex: 1;
+    min-width: 200px;
+    max-width: 340px;
+  }
+
+  .card-icon {
+    width: 44px;
+    height: 44px;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 22px;
+    margin-bottom: 14px;
+  }
+
+  .card-icon.purple { background: rgba(124,58,237,0.15); }
+  .card-icon.green { background: rgba(34,197,94,0.15); }
+  .card-icon.blue { background: rgba(59,130,246,0.15); }
+  .card-icon.yellow { background: rgba(234,179,8,0.15); }
+  .card-icon.red { background: rgba(239,68,68,0.15); }
+
+  .card h3 { font-size: 16px; font-weight: 600; margin-bottom: 6px; }
+  .card p { font-size: 13px; color: var(--muted); line-height: 1.5; }
+
+  /* Steps */
+  .steps { width: 100%; max-width: 900px; }
+  .step {
+    display: flex;
+    align-items: flex-start;
+    gap: 20px;
+    margin-bottom: 18px;
+  }
+  .step-num {
+    width: 36px;
+    height: 36px;
+    min-width: 36px;
+    border-radius: 10px;
+    background: rgba(124,58,237,0.15);
+    color: var(--purple);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 700;
+    font-size: 15px;
+  }
+  .step-text h3 { font-size: 16px; font-weight: 600; margin-bottom: 2px; }
+  .step-text p { font-size: 13px; color: var(--muted); }
+
+  /* Trigger table */
+  .trigger-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+    width: 100%;
+    max-width: 1000px;
+  }
+
+  .trigger-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 10px 16px;
+  }
+
+  .trigger-item .dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    min-width: 8px;
+  }
+  .trigger-item .dot.green { background: var(--green); }
+  .trigger-item .dot.red { background: var(--red); }
+
+  .trigger-item code {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    font-weight: 500;
+    min-width: 130px;
+    color: var(--text);
+  }
+  .trigger-item span {
+    font-size: 12px;
+    color: var(--muted);
+  }
+
+  /* Architecture diagram */
+  .arch-box {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 16px 24px;
+    text-align: center;
+    min-width: 200px;
+  }
+  .arch-box .label {
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    color: var(--muted);
+    margin-bottom: 4px;
+  }
+  .arch-box .name {
+    font-size: 16px;
+    font-weight: 600;
+  }
+  .arch-arrow {
+    font-size: 24px;
+    color: var(--purple);
+    display: flex;
+    align-items: center;
+  }
+  .arch-row {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    justify-content: center;
+    width: 100%;
+  }
+
+  /* AI providers */
+  .provider-grid {
+    display: flex;
+    gap: 16px;
+    justify-content: center;
+    flex-wrap: wrap;
+  }
+  .provider-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 20px 28px;
+    text-align: center;
+    min-width: 140px;
+  }
+  .provider-card .emoji { font-size: 32px; margin-bottom: 10px; }
+  .provider-card .name { font-size: 15px; font-weight: 600; }
+  .provider-card .desc { font-size: 11px; color: var(--muted); margin-top: 4px; }
+
+  /* Progress bar animation */
+  .progress-bar-container {
+    width: 100%;
+    max-width: 400px;
+    margin: 0 auto;
+  }
+
+  /* Monad chain badge */
+  .chain-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: rgba(124,58,237,0.1);
+    border: 1px solid rgba(124,58,237,0.2);
+    border-radius: 100px;
+    padding: 8px 20px;
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--purple);
+  }
+
+  /* Final CTA */
+  .cta-btn {
+    display: inline-block;
+    padding: 14px 40px;
+    background: var(--purple);
+    color: white;
+    border-radius: 12px;
+    font-size: 18px;
+    font-weight: 600;
+    text-decoration: none;
+    margin-top: 16px;
+    box-shadow: 0 0 30px var(--purple-glow);
+  }
+
+  .url-text {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 16px;
+    color: var(--muted);
+    margin-top: 12px;
+  }
+
+  /* Typing animation for chat demo */
+  .chat-demo {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 24px;
+    width: 100%;
+    max-width: 600px;
+  }
+  .chat-msg {
+    padding: 10px 16px;
+    border-radius: 14px;
+    margin-bottom: 10px;
+    font-size: 13px;
+    line-height: 1.5;
+    max-width: 85%;
+  }
+  .chat-msg.user {
+    background: var(--purple);
+    color: white;
+    margin-left: auto;
+  }
+  .chat-msg.bot {
+    background: #1e1e2e;
+    color: var(--text);
+  }
+  .chat-msg.bot .action {
+    display: inline-block;
+    margin-top: 6px;
+    padding: 4px 10px;
+    background: rgba(34,197,94,0.15);
+    border: 1px solid rgba(34,197,94,0.3);
+    border-radius: 6px;
+    font-size: 11px;
+    color: var(--green);
+  }
+
+  /* Orderbook visual */
+  .ob-container {
+    display: flex;
+    gap: 20px;
+    width: 100%;
+    max-width: 700px;
+  }
+  .ob-side {
+    flex: 1;
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 16px;
+  }
+  .ob-side h4 {
+    font-size: 13px;
+    font-weight: 600;
+    margin-bottom: 10px;
+  }
+  .ob-side h4.green { color: var(--green); }
+  .ob-side h4.red { color: var(--red); }
+  .ob-row {
+    display: flex;
+    justify-content: space-between;
+    padding: 4px 0;
+    font-size: 12px;
+    font-family: 'JetBrains Mono', monospace;
+    position: relative;
+  }
+  .ob-row .bar {
+    position: absolute;
+    inset: 0;
+    border-radius: 3px;
+    opacity: 0.1;
+  }
+  .ob-row .bar.green { background: var(--green); }
+  .ob-row .bar.red { background: var(--red); }
+  .ob-row span { position: relative; z-index: 1; }
+  .ob-row .price-green { color: var(--green); }
+  .ob-row .price-red { color: var(--red); }
+</style>
+</head>
+<body>
+
+<div class="bg-grid"></div>
+<div class="bg-glow"></div>
+
+<!-- SLIDE 1: Title -->
+<div class="slide" id="s1">
+  <div class="stagger" style="text-align:center">
+    <div class="badge">Moltiverse Hackathon 2026</div>
+    <div class="title">
+      <span class="purple">Synthetic</span> Order Flow
+    </div>
+    <div class="subtitle">
+      Autonomous AI-agent powered limit orders for tokens on Monad
+    </div>
+    <div class="chain-badge" style="margin-top:28px">
+      Monad Mainnet, Chain ID: 143
+    </div>
+  </div>
+</div>
+
+<!-- SLIDE 2: The Problem -->
+<div class="slide" id="s2">
+  <div class="stagger" style="text-align:center; max-width:800px">
+    <div class="badge">The Problem</div>
+    <div class="section-title">No limit orders on nad.fun</div>
+    <div class="section-sub">
+      nad.fun is the leading meme token launchpad on Monad with bonding curve mechanics,
+      but traders can only execute market orders. No way to set price targets,
+      DCA schedules, or trailing stops.
+    </div>
+    <div class="card-row" style="margin-top: 10px">
+      <div class="card">
+        <div class="card-icon red">&#10060;</div>
+        <h3>Manual Trading</h3>
+        <p>Watch charts 24/7, execute manually, miss targets while sleeping</p>
+      </div>
+      <div class="card">
+        <div class="card-icon red">&#10060;</div>
+        <h3>No Automation</h3>
+        <p>No stop losses, no take profits, no DCA, no trailing stops</p>
+      </div>
+      <div class="card">
+        <div class="card-icon red">&#10060;</div>
+        <h3>Missed Opportunities</h3>
+        <p>Price dips and graduation events happen when you're away</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- SLIDE 3: The Solution - How it works -->
+<div class="slide" id="s3">
+  <div class="stagger" style="text-align:center; max-width:900px">
+    <div class="badge">The Solution</div>
+    <div class="section-title">Set conditions. Walk away.</div>
+    <div class="steps" style="margin-top:10px">
+      <div class="step">
+        <div class="step-num">1</div>
+        <div class="step-text">
+          <h3>Connect wallet</h3>
+          <p>MetaMask or WalletConnect on Monad</p>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-num">2</div>
+        <div class="step-text">
+          <h3>Create agent wallet</h3>
+          <p>System generates an encrypted wallet for auto-execution</p>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-num">3</div>
+        <div class="step-text">
+          <h3>Fund it and create orders</h3>
+          <p>Choose from 12 trigger types, set your parameters</p>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-num">4</div>
+        <div class="step-text">
+          <h3>Agent monitors every 5 seconds</h3>
+          <p>Checks on-chain state via Lens contract multicall</p>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-num">5</div>
+        <div class="step-text">
+          <h3>Auto-executes on-chain</h3>
+          <p>Agent wallet signs and submits the tx. No manual signing needed.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- SLIDE 4: 12 Trigger Types -->
+<div class="slide" id="s4">
+  <div class="stagger" style="text-align:center; width:100%">
+    <div class="badge">12 Trigger Types</div>
+    <div class="section-title">Every trading scenario covered</div>
+    <div class="trigger-grid">
+      <div class="trigger-item"><div class="dot green"></div><code>PRICE_BELOW</code><span>Buy when price drops to target</span></div>
+      <div class="trigger-item"><div class="dot red"></div><code>PRICE_ABOVE</code><span>Sell when price rises to target</span></div>
+      <div class="trigger-item"><div class="dot green"></div><code>MCAP_BELOW</code><span>Buy when market cap drops</span></div>
+      <div class="trigger-item"><div class="dot red"></div><code>MCAP_ABOVE</code><span>Sell when market cap exceeds</span></div>
+      <div class="trigger-item"><div class="dot green"></div><code>PROGRESS_BELOW</code><span>Buy early on bonding curve</span></div>
+      <div class="trigger-item"><div class="dot red"></div><code>PROGRESS_ABOVE</code><span>Sell near graduation</span></div>
+      <div class="trigger-item"><div class="dot green"></div><code>DCA_INTERVAL</code><span>Recurring buys (1m to 24h)</span></div>
+      <div class="trigger-item"><div class="dot red"></div><code>POST_GRADUATION</code><span>Sell when token hits DEX</span></div>
+      <div class="trigger-item"><div class="dot green"></div><code>PRICE_DROP_PCT</code><span>Buy after X% drop</span></div>
+      <div class="trigger-item"><div class="dot red"></div><code>TRAILING_STOP</code><span>Sell after X% from peak</span></div>
+      <div class="trigger-item"><div class="dot green"></div><code>STOP_LOSS</code><span>Sell after X% loss</span></div>
+      <div class="trigger-item"><div class="dot red"></div><code>TAKE_PROFIT</code><span>Sell after X% gain</span></div>
+    </div>
+  </div>
+</div>
+
+<!-- SLIDE 5: AI Chat -->
+<div class="slide" id="s5">
+  <div class="stagger" style="text-align:center; width:100%">
+    <div class="badge">AI-Powered</div>
+    <div class="section-title">Create orders in natural language</div>
+    <div class="section-sub">Talk to your AI agent. It creates orders for you.</div>
+    <div class="chat-demo">
+      <div class="chat-msg user">
+        Buy 0.05 MON of CHOG when market cap drops below 8000 MON
+      </div>
+      <div class="chat-msg bot">
+        I'll create a BUY order for CHOG with these parameters:<br>
+        Trigger: MCAP_BELOW at 8,000 MON<br>
+        Amount: 0.05 MON, Slippage: 3%<br>
+        Expiry: 7 days<br><br>
+        Should I create this order?
+      </div>
+      <div class="chat-msg user">Yes</div>
+      <div class="chat-msg bot">
+        Done! Your order has been created.
+        <div class="action">Order created (ID: clx8f2k9...)</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- SLIDE 6: AI Features -->
+<div class="slide" id="s6">
+  <div class="stagger" style="text-align:center; width:100%">
+    <div class="badge">5 AI Capabilities</div>
+    <div class="section-title">4 providers, automatic fallback</div>
+    <div class="card-row" style="margin-top:10px">
+      <div class="card">
+        <div class="card-icon purple">&#128172;</div>
+        <h3>AI Chat</h3>
+        <p>Create and cancel orders with natural language</p>
+      </div>
+      <div class="card">
+        <div class="card-icon blue">&#128200;</div>
+        <h3>Token Analysis</h3>
+        <p>On-demand market data analysis for any token</p>
+      </div>
+      <div class="card">
+        <div class="card-icon green">&#127919;</div>
+        <h3>Strategy Suggestions</h3>
+        <p>AI recommends trigger type and value</p>
+      </div>
+    </div>
+    <div class="card-row" style="margin-top:10px">
+      <div class="card">
+        <div class="card-icon yellow">&#9888;&#65039;</div>
+        <h3>Risk Check</h3>
+        <p>Opt-in pre-execution risk assessment (fail-open)</p>
+      </div>
+      <div class="card">
+        <div class="card-icon purple">&#128221;</div>
+        <h3>Explanations</h3>
+        <p>Human-readable explanation for every executed trade</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- SLIDE 7: AI Providers -->
+<div class="slide" id="s7">
+  <div class="stagger" style="text-align:center; width:100%">
+    <div class="badge">BYOK - Bring Your Own Key</div>
+    <div class="section-title">Multi-provider with auto-fallback</div>
+    <div class="provider-grid" style="margin-top:20px">
+      <div class="provider-card">
+        <div class="emoji">&#9889;</div>
+        <div class="name">Groq</div>
+        <div class="desc">LPU inference, fastest</div>
+      </div>
+      <div class="provider-card">
+        <div class="emoji">&#129302;</div>
+        <div class="name">Claude</div>
+        <div class="desc">Detailed analysis</div>
+      </div>
+      <div class="provider-card">
+        <div class="emoji">&#128161;</div>
+        <div class="name">GPT-4o</div>
+        <div class="desc">Strategy suggestions</div>
+      </div>
+      <div class="provider-card">
+        <div class="emoji">&#128142;</div>
+        <div class="name">Gemini</div>
+        <div class="desc">Token analysis</div>
+      </div>
+    </div>
+    <div class="section-sub" style="margin-top:20px">
+      Auto mode: round-robin rotation through all configured providers.
+      If one fails, the next takes over automatically.
+    </div>
+  </div>
+</div>
+
+<!-- SLIDE 8: Architecture -->
+<div class="slide" id="s8">
+  <div class="stagger" style="text-align:center; width:100%">
+    <div class="badge">Architecture</div>
+    <div class="section-title">Full-stack monorepo</div>
+    <div class="arch-row" style="margin-top:20px">
+      <div class="arch-box">
+        <div class="label">Frontend</div>
+        <div class="name">Next.js 15</div>
+        <div style="font-size:11px;color:var(--muted);margin-top:4px">RainbowKit, wagmi, Tailwind</div>
+      </div>
+      <div class="arch-arrow">&#8594;</div>
+      <div class="arch-box">
+        <div class="label">Agent</div>
+        <div class="name">Express + TypeScript</div>
+        <div style="font-size:11px;color:var(--muted);margin-top:4px">Monitor loop, AI, SSE, execution</div>
+      </div>
+      <div class="arch-arrow">&#8594;</div>
+      <div class="arch-box">
+        <div class="label">Blockchain</div>
+        <div class="name">Monad (143)</div>
+        <div style="font-size:11px;color:var(--muted);margin-top:4px">BondingCurve + DEX routers</div>
+      </div>
+    </div>
+    <div class="arch-row" style="margin-top:16px">
+      <div class="arch-box">
+        <div class="label">Database</div>
+        <div class="name">MySQL + Prisma</div>
+      </div>
+      <div style="width:40px"></div>
+      <div class="arch-box">
+        <div class="label">Security</div>
+        <div class="name">AES-256-CBC + scrypt</div>
+      </div>
+      <div style="width:40px"></div>
+      <div class="arch-box">
+        <div class="label">Real-time</div>
+        <div class="name">SSE Push Events</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- SLIDE 9: CTA -->
+<div class="slide" id="s9">
+  <div class="stagger" style="text-align:center">
+    <div class="badge">Try It Now</div>
+    <div class="title">
+      <span class="purple">Synthetic</span> Order Flow
+    </div>
+    <div class="subtitle">
+      12 trigger types. 4 AI providers. Fully autonomous execution.
+      Built on Monad for the Moltiverse Hackathon.
+    </div>
+    <div class="url-text" style="margin-top:24px">
+      https://devnads.xyz
+    </div>
+  </div>
+</div>
+
+<!-- Progress bar -->
+<div style="position:fixed;bottom:0;left:0;right:0;height:3px;background:rgba(124,58,237,0.1);z-index:100">
+  <div style="height:100%;background:var(--purple);width:0;animation:progress 52s linear forwards"></div>
+</div>
+<style>
+  @keyframes progress { from { width: 0; } to { width: 100%; } }
+</style>
+
+</body>
+</html>
