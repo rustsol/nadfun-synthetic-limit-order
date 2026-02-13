@@ -6,47 +6,55 @@
 <title>Synthetic Order Flow - Demo Video</title>
 <style>
   * { margin: 0; padding: 0; box-sizing: border-box; }
-  body { background: #0a0a0f; color: #fff; font-family: 'Segoe UI', system-ui, sans-serif; overflow: hidden; width: 1280px; height: 720px; }
-  .slide { position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; opacity: 0; transition: opacity 0.8s; padding: 60px; }
-  .slide.active { opacity: 1; }
+  body { background: #fff; color: #1a1a1a; font-family: 'Segoe UI', system-ui, sans-serif; overflow: hidden; width: 1280px; height: 720px; }
+  .slide { position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; opacity: 0; transition: opacity 0.4s; padding: 60px; pointer-events: none; }
+  .slide.active { opacity: 1; pointer-events: auto; }
   .slide h1 { font-size: 48px; font-weight: 800; margin-bottom: 16px; }
-  .slide h2 { font-size: 36px; font-weight: 700; margin-bottom: 12px; }
-  .slide h3 { font-size: 24px; font-weight: 600; margin-bottom: 20px; color: #a78bfa; }
-  .slide p { font-size: 20px; color: #9ca3af; max-width: 900px; text-align: center; line-height: 1.6; }
-  .purple { color: #a78bfa; }
-  .green { color: #4ade80; }
-  .blue { color: #60a5fa; }
-  .yellow { color: #fbbf24; }
-  .red { color: #f87171; }
+  .slide h2 { font-size: 36px; font-weight: 700; margin-bottom: 12px; color: #1a1a1a; }
+  .slide h3 { font-size: 24px; font-weight: 600; margin-bottom: 20px; color: #ea580c; }
+  .slide p { font-size: 20px; color: #555; max-width: 900px; text-align: center; line-height: 1.6; }
+  .orange { color: #ea580c; }
+  .green { color: #16a34a; }
+  .blue { color: #2563eb; }
+  .yellow { color: #ca8a04; }
+  .red { color: #dc2626; }
   .mono { font-family: 'Consolas', monospace; }
-  .gradient { background: linear-gradient(135deg, #7c3aed, #3b82f6); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+  .gradient { background: linear-gradient(135deg, #ea580c, #f97316); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
   .tag { display: inline-block; padding: 4px 14px; border-radius: 20px; font-size: 14px; font-weight: 600; margin: 4px; }
-  .tag-purple { background: rgba(124,58,237,0.2); color: #a78bfa; border: 1px solid rgba(124,58,237,0.4); }
-  .tag-green { background: rgba(74,222,128,0.2); color: #4ade80; border: 1px solid rgba(74,222,128,0.4); }
-  .tag-blue { background: rgba(96,165,250,0.2); color: #60a5fa; border: 1px solid rgba(96,165,250,0.4); }
-  .tag-yellow { background: rgba(251,191,36,0.2); color: #fbbf24; border: 1px solid rgba(251,191,36,0.4); }
-  .card { background: #111827; border: 1px solid #1f2937; border-radius: 16px; padding: 24px; margin: 8px; }
+  .tag-orange { background: rgba(234,88,12,0.1); color: #ea580c; border: 1px solid rgba(234,88,12,0.3); }
+  .tag-green { background: rgba(22,163,74,0.1); color: #16a34a; border: 1px solid rgba(22,163,74,0.3); }
+  .tag-blue { background: rgba(37,99,235,0.1); color: #2563eb; border: 1px solid rgba(37,99,235,0.3); }
+  .tag-yellow { background: rgba(202,138,4,0.1); color: #ca8a04; border: 1px solid rgba(202,138,4,0.3); }
+  .card { background: #fafafa; border: 1px solid #e5e5e5; border-radius: 16px; padding: 24px; margin: 8px; box-shadow: 0 1px 3px rgba(0,0,0,0.05); }
   .grid2 { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; width: 100%; max-width: 1000px; }
   .grid3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 16px; width: 100%; max-width: 1100px; }
-  .fade-up { opacity: 0; transform: translateY(30px); }
-  .fade-up.show { opacity: 1; transform: translateY(0); transition: all 0.6s ease; }
-  .progress-bar { position: fixed; top: 0; left: 0; height: 3px; background: linear-gradient(90deg, #7c3aed, #3b82f6); z-index: 100; transition: width 0.3s; }
-  .timer { position: fixed; top: 12px; right: 20px; font-size: 14px; color: #6b7280; font-family: monospace; z-index: 100; }
-  .mock-ui { background: #0f1523; border: 1px solid #1e293b; border-radius: 12px; overflow: hidden; width: 100%; max-width: 1000px; }
-  .mock-header { background: #0a0f1a; border-bottom: 1px solid #1e293b; padding: 10px 20px; display: flex; align-items: center; justify-content: space-between; }
-  .mock-header .logo { color: #a78bfa; font-weight: 700; font-size: 14px; }
-  .mock-header .nav { display: flex; gap: 16px; font-size: 12px; color: #6b7280; }
-  .mock-header .btn { background: #7c3aed; color: #fff; padding: 4px 12px; border-radius: 8px; font-size: 11px; }
+  .fade-up { opacity: 0; transform: translateY(20px); }
+  .fade-up.show { opacity: 1; transform: translateY(0); transition: all 0.35s ease; }
+  /* Top progress bar */
+  .progress-bar { position: fixed; top: 0; left: 0; height: 4px; background: linear-gradient(90deg, #ea580c, #f97316); z-index: 100; transition: width 0.3s; }
+  .timer { position: fixed; top: 12px; right: 20px; font-size: 14px; color: #999; font-family: monospace; z-index: 100; }
+  /* Slide scrubber */
+  .scrubber { position: fixed; bottom: 0; left: 0; right: 0; height: 48px; background: #f5f5f5; border-top: 1px solid #e0e0e0; display: flex; align-items: center; z-index: 200; padding: 0 16px; gap: 6px; }
+  .scrub-dot { flex: 1; height: 28px; border-radius: 6px; border: none; cursor: pointer; font-size: 10px; font-weight: 600; color: #888; background: #e8e8e8; transition: all 0.2s; display: flex; align-items: center; justify-content: center; }
+  .scrub-dot:hover { background: #fde8d8; color: #ea580c; }
+  .scrub-dot.active { background: #ea580c; color: #fff; }
+  .scrub-dot.visited { background: #fed7aa; color: #ea580c; }
+  .play-btn { width: 28px; height: 28px; border-radius: 6px; border: none; cursor: pointer; background: #ea580c; color: #fff; font-size: 12px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+  .play-btn:hover { background: #c2410c; }
+  /* Mock UI */
+  .mock-ui { background: #fff; border: 1px solid #e0e0e0; border-radius: 12px; overflow: hidden; width: 100%; max-width: 1000px; box-shadow: 0 4px 12px rgba(0,0,0,0.08); }
+  .mock-header { background: #fafafa; border-bottom: 1px solid #e5e5e5; padding: 10px 20px; display: flex; align-items: center; justify-content: space-between; }
+  .mock-header .logo { color: #ea580c; font-weight: 700; font-size: 14px; }
+  .mock-header .nav { display: flex; gap: 16px; font-size: 12px; color: #888; }
+  .mock-header .btn { background: #ea580c; color: #fff; padding: 4px 12px; border-radius: 8px; font-size: 11px; }
   .mock-body { padding: 20px; }
-  .typing { border-right: 2px solid #a78bfa; animation: blink 0.8s infinite; }
-  @keyframes blink { 0%,100% { border-color: #a78bfa; } 50% { border-color: transparent; } }
   @keyframes pulse { 0%,100% { opacity: 1; } 50% { opacity: 0.5; } }
   .pulse { animation: pulse 2s infinite; }
-  .step-num { width: 40px; height: 40px; border-radius: 50%; background: rgba(124,58,237,0.2); border: 2px solid #7c3aed; display: flex; align-items: center; justify-content: center; font-weight: 800; font-size: 18px; color: #a78bfa; flex-shrink: 0; }
+  .step-num { width: 40px; height: 40px; border-radius: 50%; background: rgba(234,88,12,0.1); border: 2px solid #ea580c; display: flex; align-items: center; justify-content: center; font-weight: 800; font-size: 18px; color: #ea580c; flex-shrink: 0; }
   .step-row { display: flex; align-items: center; gap: 16px; text-align: left; margin: 6px 0; }
   .step-row p { text-align: left; font-size: 17px; }
-  .watermark { position: fixed; bottom: 16px; right: 24px; font-size: 12px; color: #374151; z-index: 100; }
-  .chain-badge { display: inline-flex; align-items: center; gap: 6px; background: rgba(124,58,237,0.15); border: 1px solid rgba(124,58,237,0.3); padding: 6px 16px; border-radius: 24px; font-size: 16px; font-weight: 600; color: #a78bfa; margin-top: 12px; }
+  .watermark { position: fixed; bottom: 54px; right: 24px; font-size: 12px; color: #bbb; z-index: 100; }
+  .chain-badge { display: inline-flex; align-items: center; gap: 6px; background: rgba(234,88,12,0.08); border: 1px solid rgba(234,88,12,0.25); padding: 6px 16px; border-radius: 24px; font-size: 16px; font-weight: 600; color: #ea580c; margin-top: 12px; }
 </style>
 </head>
 <body>
@@ -55,18 +63,34 @@
 <div class="timer" id="timer">0:00 / 2:00</div>
 <div class="watermark">devnads.xyz</div>
 
+<!-- Slide Scrubber -->
+<div class="scrubber">
+  <button class="play-btn" id="playPause" title="Play/Pause">&#9654;</button>
+  <button class="scrub-dot active" data-idx="0">Title</button>
+  <button class="scrub-dot" data-idx="1">Problem</button>
+  <button class="scrub-dot" data-idx="2">Solution</button>
+  <button class="scrub-dot" data-idx="3">Triggers</button>
+  <button class="scrub-dot" data-idx="4">Order UI</button>
+  <button class="scrub-dot" data-idx="5">Execution</button>
+  <button class="scrub-dot" data-idx="6">AI Chat</button>
+  <button class="scrub-dot" data-idx="7">AI Features</button>
+  <button class="scrub-dot" data-idx="8">Security</button>
+  <button class="scrub-dot" data-idx="9">Stack</button>
+  <button class="scrub-dot" data-idx="10">CTA</button>
+</div>
+
 <!-- Slide 0: Title -->
 <div class="slide active" id="s0">
   <h1 class="gradient">Synthetic Order Flow</h1>
-  <p style="font-size: 24px; color: #d1d5db; margin: 16px 0;">AI-Powered Limit Orders for nad.fun Tokens</p>
+  <p style="font-size: 24px; color: #555; margin: 16px 0;">AI-Powered Limit Orders for nad.fun Tokens</p>
   <div class="chain-badge">Built on Monad</div>
-  <p style="margin-top: 24px; font-size: 16px; color: #6b7280;">Moltiverse Hackathon 2026</p>
+  <p style="margin-top: 24px; font-size: 16px; color: #999;">Moltiverse Hackathon 2026</p>
 </div>
 
 <!-- Slide 1: Problem -->
 <div class="slide" id="s1">
   <h2>The Problem</h2>
-  <p style="font-size: 22px; color: #d1d5db; margin: 20px 0;">nad.fun has no limit orders. Traders must manually watch prices 24/7 and execute trades by hand.</p>
+  <p style="font-size: 22px; color: #555; margin: 20px 0;">nad.fun has no limit orders. Traders must manually watch prices 24/7 and execute trades by hand.</p>
   <div class="grid2" style="margin-top: 24px;">
     <div class="card fade-up">
       <p class="red" style="font-size: 18px; font-weight: 600; text-align: left;">No automation</p>
@@ -90,17 +114,17 @@
 <!-- Slide 2: Solution -->
 <div class="slide" id="s2">
   <h2>The Solution</h2>
-  <p style="font-size: 22px; color: #d1d5db; margin: 16px 0;">An autonomous AI agent that monitors, evaluates, and executes trades for you</p>
+  <p style="font-size: 22px; color: #555; margin: 16px 0;">An autonomous AI agent that monitors, evaluates, and executes trades for you</p>
   <div style="display: flex; flex-direction: column; gap: 12px; margin-top: 24px; width: 100%; max-width: 800px;">
-    <div class="step-row fade-up"><div class="step-num">1</div><p><span class="purple">Connect</span> your wallet and create an AI agent</p></div>
-    <div class="step-row fade-up"><div class="step-num">2</div><p><span class="purple">Fund</span> the agent wallet with MON</p></div>
-    <div class="step-row fade-up"><div class="step-num">3</div><p><span class="purple">Set</span> your trigger conditions (price, mcap, DCA, trailing stop...)</p></div>
+    <div class="step-row fade-up"><div class="step-num">1</div><p><span class="orange">Connect</span> your wallet and create an AI agent</p></div>
+    <div class="step-row fade-up"><div class="step-num">2</div><p><span class="orange">Fund</span> the agent wallet with MON</p></div>
+    <div class="step-row fade-up"><div class="step-num">3</div><p><span class="orange">Set</span> your trigger conditions (price, mcap, DCA, trailing stop...)</p></div>
     <div class="step-row fade-up"><div class="step-num">4</div><p><span class="green">Agent monitors</span> the chain every 5 seconds</p></div>
     <div class="step-row fade-up"><div class="step-num">5</div><p><span class="green">Auto-executes</span> when conditions are met</p></div>
   </div>
 </div>
 
-<!-- Slide 3: 12 Trigger Types -->
+<!-- Slide 3: 14 Trigger Types -->
 <div class="slide" id="s3">
   <h2>14 Trigger Types</h2>
   <p style="margin-bottom: 24px;">Every strategy covered, from basic price targets to advanced DCA</p>
@@ -145,36 +169,36 @@
       <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
         <div>
           <div style="display:flex; gap:8px; margin-bottom: 12px;">
-            <div style="flex:1; padding: 8px; background: #166534; border-radius: 8px; text-align: center; font-weight: 600; font-size: 14px;">Buy</div>
-            <div style="flex:1; padding: 8px; background: #1f2937; border-radius: 8px; text-align: center; color: #6b7280; font-size: 14px;">Sell</div>
+            <div style="flex:1; padding: 8px; background: #16a34a; color: #fff; border-radius: 8px; text-align: center; font-weight: 600; font-size: 14px;">Buy</div>
+            <div style="flex:1; padding: 8px; background: #f5f5f5; border-radius: 8px; text-align: center; color: #999; font-size: 14px;">Sell</div>
           </div>
           <div style="margin-bottom: 10px;">
-            <p style="font-size: 11px; color: #6b7280; margin-bottom: 4px;">Trigger Condition</p>
-            <div style="background: #1f2937; border: 1px solid #374151; border-radius: 8px; padding: 8px 12px; font-size: 13px;" id="trigger-text">Market cap drops below (USD)</div>
+            <p style="font-size: 11px; color: #999; margin-bottom: 4px;">Trigger Condition</p>
+            <div style="background: #f5f5f5; border: 1px solid #e0e0e0; border-radius: 8px; padding: 8px 12px; font-size: 13px;">Market cap drops below (USD)</div>
           </div>
           <div style="margin-bottom: 10px;">
-            <p style="font-size: 11px; color: #6b7280; margin-bottom: 4px;">Target Market Cap (USD)</p>
-            <div style="background: #1f2937; border: 1px solid #374151; border-radius: 8px; padding: 8px 12px; font-size: 13px;" id="target-text">280000</div>
+            <p style="font-size: 11px; color: #999; margin-bottom: 4px;">Target Market Cap (USD)</p>
+            <div style="background: #f5f5f5; border: 1px solid #e0e0e0; border-radius: 8px; padding: 8px 12px; font-size: 13px;">280000</div>
           </div>
           <div style="margin-bottom: 10px;">
-            <p style="font-size: 11px; color: #6b7280; margin-bottom: 4px;">Amount (MON to spend)</p>
-            <div style="background: #1f2937; border: 1px solid #374151; border-radius: 8px; padding: 8px 12px; font-size: 13px;">0.1</div>
+            <p style="font-size: 11px; color: #999; margin-bottom: 4px;">Amount (MON to spend)</p>
+            <div style="background: #f5f5f5; border: 1px solid #e0e0e0; border-radius: 8px; padding: 8px 12px; font-size: 13px;">0.1</div>
           </div>
-          <div style="background: #7c3aed; text-align: center; padding: 10px; border-radius: 8px; font-weight: 700; font-size: 14px; margin-top: 8px;" id="create-btn">Create BUY Order (Auto-Execute)</div>
+          <div style="background: #ea580c; color: #fff; text-align: center; padding: 10px; border-radius: 8px; font-weight: 700; font-size: 14px; margin-top: 8px;">Create BUY Order (Auto-Execute)</div>
         </div>
         <div>
-          <div style="background: rgba(124,58,237,0.1); border: 1px solid rgba(124,58,237,0.3); border-radius: 8px; padding: 12px; margin-bottom: 10px;">
-            <p style="font-size: 11px; color: #6b7280;">Current Price</p>
-            <p style="font-size: 16px; font-weight: 600; font-family: monospace;">0.013781 MON</p>
-            <p style="font-size: 11px; color: #6b7280; margin-top: 6px;">Market Cap</p>
-            <p style="font-size: 16px; font-weight: 600; font-family: monospace;">$296,268</p>
-            <p style="font-size: 11px; color: #6b7280; margin-top: 6px;">Holders</p>
-            <p style="font-size: 14px; font-family: monospace;">374</p>
+          <div style="background: rgba(234,88,12,0.06); border: 1px solid rgba(234,88,12,0.2); border-radius: 8px; padding: 12px; margin-bottom: 10px;">
+            <p style="font-size: 11px; color: #999;">Current Price</p>
+            <p style="font-size: 16px; font-weight: 600; font-family: monospace; color: #1a1a1a;">0.013781 MON</p>
+            <p style="font-size: 11px; color: #999; margin-top: 6px;">Market Cap</p>
+            <p style="font-size: 16px; font-weight: 600; font-family: monospace; color: #1a1a1a;">$296,268</p>
+            <p style="font-size: 11px; color: #999; margin-top: 6px;">Holders</p>
+            <p style="font-size: 14px; font-family: monospace; color: #1a1a1a;">374</p>
           </div>
-          <div style="background: #0c1222; border: 1px solid #1e293b; border-radius: 8px; padding: 10px;">
-            <p style="font-size: 11px; color: #6b7280;">Agent Wallet</p>
-            <p style="font-size: 12px; font-family: monospace; color: #9ca3af;">0x553c...c43f</p>
-            <p style="font-size: 13px; font-family: monospace; margin-top: 4px;">0.869 MON</p>
+          <div style="background: #f9f9f9; border: 1px solid #e5e5e5; border-radius: 8px; padding: 10px;">
+            <p style="font-size: 11px; color: #999;">Agent Wallet</p>
+            <p style="font-size: 12px; font-family: monospace; color: #666;">0x553c...c43f</p>
+            <p style="font-size: 13px; font-family: monospace; margin-top: 4px; color: #1a1a1a;">0.869 MON</p>
           </div>
         </div>
       </div>
@@ -188,27 +212,27 @@
   <p style="margin-bottom: 28px;">Every 5 seconds, the agent evaluates all active orders</p>
   <div style="display: flex; align-items: center; gap: 12px; max-width: 1000px;">
     <div class="card fade-up" style="text-align: center; flex: 1;">
-      <p style="font-size: 28px;">1</p>
+      <p style="font-size: 28px; color: #ea580c; font-weight: 800;">1</p>
       <p class="blue" style="font-size: 14px; font-weight: 600;">Fetch State</p>
-      <p style="font-size: 12px; color: #6b7280; margin-top: 4px;">Read on-chain price, mcap, progress from bonding curve + DEX</p>
+      <p style="font-size: 12px; color: #888; margin-top: 4px;">Read on-chain price, mcap, progress from bonding curve + DEX</p>
     </div>
-    <p style="font-size: 24px; color: #374151;">></p>
+    <p style="font-size: 24px; color: #ddd;">&#10140;</p>
     <div class="card fade-up" style="text-align: center; flex: 1;">
-      <p style="font-size: 28px;">2</p>
-      <p class="purple" style="font-size: 14px; font-weight: 600;">Evaluate</p>
-      <p style="font-size: 12px; color: #6b7280; margin-top: 4px;">Check trigger conditions against live data</p>
+      <p style="font-size: 28px; color: #ea580c; font-weight: 800;">2</p>
+      <p class="orange" style="font-size: 14px; font-weight: 600;">Evaluate</p>
+      <p style="font-size: 12px; color: #888; margin-top: 4px;">Check trigger conditions against live data</p>
     </div>
-    <p style="font-size: 24px; color: #374151;">></p>
+    <p style="font-size: 24px; color: #ddd;">&#10140;</p>
     <div class="card fade-up" style="text-align: center; flex: 1;">
-      <p style="font-size: 28px;">3</p>
+      <p style="font-size: 28px; color: #ea580c; font-weight: 800;">3</p>
       <p class="yellow" style="font-size: 14px; font-weight: 600;">AI Risk Check</p>
-      <p style="font-size: 12px; color: #6b7280; margin-top: 4px;">Optional AI review before execution (fail-open)</p>
+      <p style="font-size: 12px; color: #888; margin-top: 4px;">Optional AI review before execution (fail-open)</p>
     </div>
-    <p style="font-size: 24px; color: #374151;">></p>
+    <p style="font-size: 24px; color: #ddd;">&#10140;</p>
     <div class="card fade-up" style="text-align: center; flex: 1;">
-      <p style="font-size: 28px;">4</p>
+      <p style="font-size: 28px; color: #ea580c; font-weight: 800;">4</p>
       <p class="green" style="font-size: 14px; font-weight: 600;">Execute</p>
-      <p style="font-size: 12px; color: #6b7280; margin-top: 4px;">Sign and send tx from agent wallet on Monad</p>
+      <p style="font-size: 12px; color: #888; margin-top: 4px;">Sign and send tx from agent wallet on Monad</p>
     </div>
   </div>
 </div>
@@ -219,28 +243,28 @@
   <div class="mock-ui fade-up" style="max-width: 800px;">
     <div class="mock-header">
       <span class="logo">AI Trading Assistant</span>
-      <div class="nav"><span class="tag tag-purple" style="font-size: 11px;">Groq</span><span class="tag tag-blue" style="font-size: 11px;">Claude</span><span class="tag tag-green" style="font-size: 11px;">OpenAI</span><span class="tag tag-yellow" style="font-size: 11px;">Gemini</span></div>
+      <div class="nav"><span class="tag tag-orange" style="font-size: 11px;">Groq</span><span class="tag tag-blue" style="font-size: 11px;">Claude</span><span class="tag tag-green" style="font-size: 11px;">OpenAI</span><span class="tag tag-yellow" style="font-size: 11px;">Gemini</span></div>
     </div>
     <div class="mock-body" style="font-size: 14px;">
       <div style="margin-bottom: 12px;">
-        <div style="background: #1e293b; border-radius: 12px 12px 12px 0; padding: 10px 14px; display: inline-block; max-width: 80%;">
-          <p style="font-size: 13px;" id="chat-user">Buy 0.1 MON of CHAINMMO when market cap drops below $280k</p>
+        <div style="background: #f5f5f5; border-radius: 12px 12px 12px 0; padding: 10px 14px; display: inline-block; max-width: 80%;">
+          <p style="font-size: 13px; color: #333;">Buy 0.1 MON of CHAINMMO when market cap drops below $280k</p>
         </div>
       </div>
       <div style="margin-bottom: 12px; text-align: right;">
-        <div style="background: rgba(124,58,237,0.2); border-radius: 12px 12px 0 12px; padding: 10px 14px; display: inline-block; max-width: 80%; text-align: left;">
-          <p style="font-size: 13px;" id="chat-ai">Order created! BUY 0.1 MON of CHAINMMO when USD market cap drops below $280,000. Trigger: MCAP_BELOW_USD. Expires in 7 days. Track it on the Orders page.</p>
+        <div style="background: rgba(234,88,12,0.08); border: 1px solid rgba(234,88,12,0.15); border-radius: 12px 12px 0 12px; padding: 10px 14px; display: inline-block; max-width: 80%; text-align: left;">
+          <p style="font-size: 13px; color: #333;">Order created! BUY 0.1 MON of CHAINMMO when USD market cap drops below $280,000. Trigger: MCAP_BELOW_USD. Expires in 7 days. Track it on the Orders page.</p>
         </div>
-        <p style="font-size: 10px; color: #6b7280; margin-top: 4px;">via Groq (LPU)</p>
+        <p style="font-size: 10px; color: #999; margin-top: 4px;">via Groq (LPU)</p>
       </div>
       <div style="margin-bottom: 12px;">
-        <div style="background: #1e293b; border-radius: 12px 12px 12px 0; padding: 10px 14px; display: inline-block; max-width: 80%;">
-          <p style="font-size: 13px;">Analyze this token for me</p>
+        <div style="background: #f5f5f5; border-radius: 12px 12px 12px 0; padding: 10px 14px; display: inline-block; max-width: 80%;">
+          <p style="font-size: 13px; color: #333;">Analyze this token for me</p>
         </div>
       </div>
       <div style="text-align: right;">
-        <div style="background: rgba(124,58,237,0.2); border-radius: 12px 12px 0 12px; padding: 10px 14px; display: inline-block; max-width: 80%; text-align: left;">
-          <p style="font-size: 13px;">CHAINMMO has 374 holders with $296k mcap. Risk: Medium. Price is 56% below ATH. Reasonable liquidity for a bonding curve graduate. Consider a small DCA position.</p>
+        <div style="background: rgba(234,88,12,0.08); border: 1px solid rgba(234,88,12,0.15); border-radius: 12px 12px 0 12px; padding: 10px 14px; display: inline-block; max-width: 80%; text-align: left;">
+          <p style="font-size: 13px; color: #333;">CHAINMMO has 374 holders with $296k mcap. Risk: Medium. Price is 56% below ATH. Reasonable liquidity for a bonding curve graduate. Consider a small DCA position.</p>
         </div>
       </div>
     </div>
@@ -253,7 +277,7 @@
   <p style="margin-bottom: 24px;">Multi-provider fallback: Groq, Claude, OpenAI, Gemini with BYOK</p>
   <div class="grid3">
     <div class="card fade-up" style="padding: 16px;">
-      <p class="purple" style="font-size: 15px; font-weight: 700; text-align: left;">Post-Execution Explanations</p>
+      <p class="orange" style="font-size: 15px; font-weight: 700; text-align: left;">Post-Execution Explanations</p>
       <p style="font-size: 12px; text-align: left; margin-top: 6px;">AI explains why each trade was triggered and executed</p>
     </div>
     <div class="card fade-up" style="padding: 16px;">
@@ -273,7 +297,7 @@
       <p style="font-size: 12px; text-align: left; margin-top: 6px;">Create and manage orders through natural language</p>
     </div>
     <div class="card fade-up" style="padding: 16px;">
-      <p style="font-size: 15px; font-weight: 700; text-align: left; color: #d1d5db;">BYOK + Auto Mode</p>
+      <p style="font-size: 15px; font-weight: 700; text-align: left; color: #333;">BYOK + Auto Mode</p>
       <p style="font-size: 12px; text-align: left; margin-top: 6px;">Bring your own API keys, or let the agent rotate providers automatically</p>
     </div>
   </div>
@@ -285,7 +309,7 @@
   <p style="margin-bottom: 24px;">Agent wallets are system-generated, never touch your main wallet</p>
   <div class="grid2" style="max-width: 900px;">
     <div class="card fade-up">
-      <p class="purple" style="font-size: 16px; font-weight: 700; text-align: left;">Dedicated Agent Wallet</p>
+      <p class="orange" style="font-size: 16px; font-weight: 700; text-align: left;">Dedicated Agent Wallet</p>
       <p style="font-size: 13px; text-align: left; margin-top: 6px;">System generates a separate wallet per user. Your browser wallet is never used for execution.</p>
     </div>
     <div class="card fade-up">
@@ -308,7 +332,7 @@
   <h2>Technical Stack</h2>
   <div class="grid3" style="margin-top: 24px;">
     <div class="card fade-up" style="text-align: center;">
-      <p class="purple" style="font-size: 14px; font-weight: 700;">Frontend</p>
+      <p class="orange" style="font-size: 14px; font-weight: 700;">Frontend</p>
       <p style="font-size: 13px; margin-top: 6px;">Next.js 15</p>
       <p style="font-size: 13px;">RainbowKit + wagmi</p>
       <p style="font-size: 13px;">Tailwind CSS</p>
@@ -327,7 +351,7 @@
     </div>
   </div>
   <div style="margin-top: 20px; display: flex; gap: 8px;">
-    <span class="tag tag-purple">TypeScript</span>
+    <span class="tag tag-orange">TypeScript</span>
     <span class="tag tag-blue">Monorepo</span>
     <span class="tag tag-green">npm workspaces</span>
     <span class="tag tag-yellow">4 AI Providers</span>
@@ -337,74 +361,142 @@
 <!-- Slide 10: CTA -->
 <div class="slide" id="s10">
   <h1 class="gradient">Synthetic Order Flow</h1>
-  <p style="font-size: 24px; color: #d1d5db; margin: 20px 0;">Set it. Forget it. Your AI agent handles the rest.</p>
+  <p style="font-size: 24px; color: #555; margin: 20px 0;">Set it. Forget it. Your AI agent handles the rest.</p>
   <div style="display: flex; gap: 16px; margin-top: 20px;">
-    <div style="background: #7c3aed; padding: 12px 32px; border-radius: 12px; font-weight: 700; font-size: 18px;">Try it: devnads.xyz</div>
+    <div style="background: #ea580c; color: #fff; padding: 12px 32px; border-radius: 12px; font-weight: 700; font-size: 18px;">Try it: devnads.xyz</div>
   </div>
   <div style="display: flex; gap: 12px; margin-top: 28px;">
-    <span class="tag tag-purple">14 Trigger Types</span>
+    <span class="tag tag-orange">14 Trigger Types</span>
     <span class="tag tag-green">5 AI Capabilities</span>
     <span class="tag tag-blue">4 AI Providers</span>
     <span class="tag tag-yellow">Auto-Execute</span>
   </div>
-  <p style="margin-top: 32px; font-size: 14px; color: #4b5563;">Built for the Moltiverse Hackathon 2026 on Monad</p>
+  <p style="margin-top: 32px; font-size: 14px; color: #999;">Built for the Moltiverse Hackathon 2026 on Monad</p>
 </div>
 
 <script>
 const slides = [
-  { id: 's0',  dur: 8000  },
-  { id: 's1',  dur: 10000 },
-  { id: 's2',  dur: 12000 },
-  { id: 's3',  dur: 10000 },
-  { id: 's4',  dur: 14000 },
-  { id: 's5',  dur: 12000 },
-  { id: 's6',  dur: 14000 },
-  { id: 's7',  dur: 12000 },
-  { id: 's8',  dur: 10000 },
-  { id: 's9',  dur: 10000 },
-  { id: 's10', dur: 8000  },
+  { id: 's0',  dur: 6000  },
+  { id: 's1',  dur: 8000  },
+  { id: 's2',  dur: 9000  },
+  { id: 's3',  dur: 8000  },
+  { id: 's4',  dur: 10000 },
+  { id: 's5',  dur: 9000  },
+  { id: 's6',  dur: 10000 },
+  { id: 's7',  dur: 9000  },
+  { id: 's8',  dur: 8000  },
+  { id: 's9',  dur: 8000  },
+  { id: 's10', dur: 6000  },
 ];
 
-const TOTAL = slides.reduce((a, s) => a + s.dur, 0); // 120000ms = 2 min
 let current = 0;
-let elapsed = 0;
-let slideStart = Date.now();
+let playing = true;
+let autoTimer = null;
+let globalStart = Date.now();
+let elapsedBeforeCurrent = 0; // total elapsed time of slides before current
+
+function getElapsedForSlides(upToIdx) {
+  let t = 0;
+  for (let i = 0; i < upToIdx; i++) t += slides[i].dur;
+  return t;
+}
+
+const TOTAL = getElapsedForSlides(slides.length);
 
 function showSlide(idx) {
+  // Remove active from all
   document.querySelectorAll('.slide').forEach(s => s.classList.remove('active'));
+  document.querySelectorAll('.fade-up').forEach(f => f.classList.remove('show'));
+
   const el = document.getElementById(slides[idx].id);
   el.classList.add('active');
-  // Animate fade-ups
+
+  // Animate fade-ups fast
   setTimeout(() => {
     el.querySelectorAll('.fade-up').forEach((f, i) => {
-      setTimeout(() => f.classList.add('show'), i * 200);
+      setTimeout(() => f.classList.add('show'), i * 120);
     });
-  }, 300);
+  }, 150);
+
+  // Update scrubber dots
+  document.querySelectorAll('.scrub-dot').forEach((dot, i) => {
+    dot.classList.remove('active');
+    if (i < idx) dot.classList.add('visited');
+    if (i === idx) { dot.classList.add('active'); dot.classList.remove('visited'); }
+  });
 }
 
 function updateTimer() {
-  const now = Date.now();
-  const total = elapsed + (now - slideStart);
-  const secs = Math.min(Math.floor(total / 1000), 120);
+  const slideElapsed = Date.now() - globalStart;
+  const totalElapsed = elapsedBeforeCurrent + Math.min(slideElapsed, slides[current].dur);
+  const secs = Math.min(Math.floor(totalElapsed / 1000), Math.floor(TOTAL / 1000));
   const m = Math.floor(secs / 60);
   const s = secs % 60;
-  document.getElementById('timer').textContent = `${m}:${s.toString().padStart(2, '0')} / 2:00`;
-  document.getElementById('progress').style.width = `${(total / TOTAL) * 100}%`;
+  const totalSecs = Math.floor(TOTAL / 1000);
+  const tm = Math.floor(totalSecs / 60);
+  const ts = totalSecs % 60;
+  document.getElementById('timer').textContent = `${m}:${s.toString().padStart(2, '0')} / ${tm}:${ts.toString().padStart(2, '0')}`;
+  document.getElementById('progress').style.width = `${(totalElapsed / TOTAL) * 100}%`;
 }
 
-function advance() {
-  const now = Date.now();
-  elapsed += now - slideStart;
-  current++;
-  if (current >= slides.length) return;
-  slideStart = Date.now();
-  showSlide(current);
-  setTimeout(advance, slides[current].dur);
+function scheduleNext() {
+  if (autoTimer) clearTimeout(autoTimer);
+  if (!playing || current >= slides.length - 1) return;
+  autoTimer = setTimeout(() => {
+    goToSlide(current + 1);
+  }, slides[current].dur);
 }
 
-setInterval(updateTimer, 250);
+function goToSlide(idx) {
+  if (idx < 0 || idx >= slides.length) return;
+  if (autoTimer) clearTimeout(autoTimer);
+  current = idx;
+  elapsedBeforeCurrent = getElapsedForSlides(idx);
+  globalStart = Date.now();
+  showSlide(idx);
+  scheduleNext();
+}
+
+// Scrubber dot clicks
+document.querySelectorAll('.scrub-dot').forEach(dot => {
+  dot.addEventListener('click', () => {
+    const idx = parseInt(dot.dataset.idx);
+    goToSlide(idx);
+  });
+});
+
+// Play/Pause
+const playBtn = document.getElementById('playPause');
+playBtn.addEventListener('click', () => {
+  playing = !playing;
+  playBtn.innerHTML = playing ? '&#9646;&#9646;' : '&#9654;';
+  if (playing) {
+    globalStart = Date.now();
+    scheduleNext();
+  } else {
+    if (autoTimer) clearTimeout(autoTimer);
+    // Save partial elapsed
+    elapsedBeforeCurrent += Date.now() - globalStart;
+  }
+});
+
+// Keyboard nav
+document.addEventListener('keydown', (e) => {
+  if (e.key === 'ArrowRight' || e.key === ' ') {
+    e.preventDefault();
+    if (current < slides.length - 1) goToSlide(current + 1);
+  } else if (e.key === 'ArrowLeft') {
+    e.preventDefault();
+    if (current > 0) goToSlide(current - 1);
+  } else if (e.key === 'p') {
+    playBtn.click();
+  }
+});
+
+setInterval(updateTimer, 200);
 showSlide(0);
-setTimeout(advance, slides[0].dur);
+playBtn.innerHTML = '&#9646;&#9646;';
+scheduleNext();
 </script>
 </body>
 </html>
