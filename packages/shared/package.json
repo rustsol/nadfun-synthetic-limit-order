@@ -12,6 +12,9 @@
     "./constants": "./src/constants/index.ts",
     "./utils": "./src/utils/index.ts"
   },
+  "scripts": {
+    "build": "tsc"
+  },
   "dependencies": {
     "viem": "^2.21.0"
   }

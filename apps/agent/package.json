@@ -5,7 +5,8 @@
   "type": "module",
   "scripts": {
     "dev": "tsx watch src/index.ts",
-    "start": "tsx src/index.ts"
+    "start": "tsx src/index.ts",
+    "build": "echo 'Agent runs via tsx, no build needed'"
   },
   "dependencies": {
     "@anthropic-ai/sdk": "^0.39.0",
