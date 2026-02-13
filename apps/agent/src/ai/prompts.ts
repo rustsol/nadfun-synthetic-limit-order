@@ -105,7 +105,8 @@ export function buildStrategySuggestionPrompt(context: {
       role: 'system',
       content: `You are an AI strategy advisor for a synthetic limit order platform that trades nad.fun tokens on Monad.
 You suggest optimal order parameters based on market conditions.
-Available trigger types: PRICE_BELOW, PRICE_ABOVE, PROGRESS_BELOW, PROGRESS_ABOVE, POST_GRADUATION, MCAP_BELOW, MCAP_ABOVE, TRAILING_STOP, TAKE_PROFIT, DCA_INTERVAL, PRICE_DROP_PCT.
+Available trigger types: PRICE_BELOW, PRICE_ABOVE, PROGRESS_BELOW, PROGRESS_ABOVE, POST_GRADUATION, MCAP_BELOW, MCAP_ABOVE, MCAP_BELOW_USD, MCAP_ABOVE_USD, TRAILING_STOP, TAKE_PROFIT, DCA_INTERVAL, PRICE_DROP_PCT.
+For MCAP_BELOW_USD and MCAP_ABOVE_USD: triggerValue is a plain USD integer (e.g. "300000" for $300k). Prefer USD triggers when users mention market cap in dollar terms.
 
 Rules:
 - Respond ONLY in this exact JSON format (no markdown, no code blocks):
@@ -238,14 +239,17 @@ ACTION:CANCEL_ORDER:{"orderId":"ORDER_ID_HERE"}
 For BUY orders:
 - PRICE_BELOW: buy when price drops below value. triggerValue = price in wei.
 - PRICE_ABOVE: buy when price rises above value. triggerValue = price in wei.
-- MCAP_BELOW: buy when market cap drops below value. triggerValue = market cap in wei (e.g. 742000 MON = "742000000000000000000000").
-- MCAP_ABOVE: buy when market cap exceeds value. triggerValue = market cap in wei.
+- MCAP_BELOW: buy when market cap drops below value (in MON). triggerValue = market cap in wei (e.g. 742000 MON = "742000000000000000000000").
+- MCAP_ABOVE: buy when market cap exceeds value (in MON). triggerValue = market cap in wei.
+- MCAP_BELOW_USD: buy when USD market cap drops below value. triggerValue = plain USD integer (e.g. "300000" = $300k). PREFERRED for market cap triggers.
+- MCAP_ABOVE_USD: sell when USD market cap exceeds value. triggerValue = plain USD integer (e.g. "500000" = $500k). PREFERRED for market cap triggers.
 - DCA_INTERVAL: recurring buy at fixed intervals. triggerValue = interval in milliseconds (60000 = 1 min, 3600000 = 1 hour).
 - PRICE_DROP_PCT: buy when price drops X% from reference. triggerValue = basis points ("500" = 5%).
 - POST_GRADUATION: buy after token graduates from bonding curve. triggerValue = "1".
 
 For SELL orders:
 - PRICE_ABOVE / PRICE_BELOW: sell at price threshold. triggerValue = price in wei.
+- MCAP_ABOVE_USD: sell when USD market cap exceeds value. triggerValue = plain USD integer.
 - TAKE_PROFIT: sell when price rises X% above buy price. triggerValue = basis points.
 - STOP_LOSS: sell when price drops X% below buy price. triggerValue = basis points.
 - TRAILING_STOP: trailing stop loss. triggerValue = basis points.
