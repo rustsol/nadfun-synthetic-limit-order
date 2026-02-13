@@ -15,6 +15,7 @@ const BUY_TRIGGERS = [
   { value: 'PRICE_BELOW', label: 'Price drops to (MON/token)' },
   { value: 'PROGRESS_BELOW', label: 'Progress drops to (%)' },
   { value: 'MCAP_BELOW', label: 'Market cap drops below (MON)' },
+  { value: 'MCAP_BELOW_USD', label: 'Market cap drops below (USD)' },
   { value: 'DCA_INTERVAL', label: 'DCA — Buy at regular intervals' },
   { value: 'PRICE_DROP_PCT', label: 'Price drops by % from current' },
 ];
@@ -24,6 +25,7 @@ const SELL_TRIGGERS = [
   { value: 'PROGRESS_ABOVE', label: 'Progress rises to (%)' },
   { value: 'POST_GRADUATION', label: 'After graduation to DEX' },
   { value: 'MCAP_ABOVE', label: 'Market cap rises above (MON)' },
+  { value: 'MCAP_ABOVE_USD', label: 'Market cap rises above (USD)' },
   { value: 'TRAILING_STOP', label: 'Trailing stop — drop % from peak' },
   { value: 'TAKE_PROFIT', label: 'Take profit — gain % from current' },
 ];
@@ -218,6 +220,7 @@ export function OrderForm({ token, onCreated }: Props) {
       const isProgressTrigger = triggerType.includes('PROGRESS');
       const isPercentTrigger = ['TRAILING_STOP', 'TAKE_PROFIT', 'PRICE_DROP_PCT'].includes(triggerType);
       const isMcapTrigger = triggerType === 'MCAP_BELOW' || triggerType === 'MCAP_ABOVE';
+      const isMcapUsdTrigger = triggerType === 'MCAP_BELOW_USD' || triggerType === 'MCAP_ABOVE_USD';
       const isDca = triggerType === 'DCA_INTERVAL';
 
       let parsedTriggerValue: string;
@@ -228,6 +231,8 @@ export function OrderForm({ token, onCreated }: Props) {
       } else if (isPercentTrigger) {
         // Convert percentage to bps: 20% = 2000 bps
         parsedTriggerValue = (parseFloat(triggerValue) * 100).toString();
+      } else if (isMcapUsdTrigger) {
+        parsedTriggerValue = Math.floor(parseFloat(triggerValue)).toString();
       } else if (isMcapTrigger) {
         parsedTriggerValue = parseEther(triggerValue).toString();
       } else if (isDca) {
@@ -474,10 +479,12 @@ export function OrderForm({ token, onCreated }: Props) {
         <div>
           <label className="block text-sm text-gray-400 mb-1">
             {triggerType === 'MCAP_BELOW' || triggerType === 'MCAP_ABOVE'
-              ? 'Target Market Cap'
-              : triggerType === 'TRAILING_STOP' || triggerType === 'TAKE_PROFIT' || triggerType === 'PRICE_DROP_PCT'
-                ? 'Percentage'
-                : 'Target Value'}
+              ? 'Target Market Cap (MON)'
+              : triggerType === 'MCAP_BELOW_USD' || triggerType === 'MCAP_ABOVE_USD'
+                ? 'Target Market Cap (USD)'
+                : triggerType === 'TRAILING_STOP' || triggerType === 'TAKE_PROFIT' || triggerType === 'PRICE_DROP_PCT'
+                  ? 'Percentage'
+                  : 'Target Value'}
           </label>
           <input
             type="number"
@@ -487,6 +494,7 @@ export function OrderForm({ token, onCreated }: Props) {
             placeholder={
               triggerType.includes('PROGRESS') ? 'e.g. 50 (%)'
               : triggerType === 'MCAP_BELOW' || triggerType === 'MCAP_ABOVE' ? 'e.g. 5000 (MON)'
+              : triggerType === 'MCAP_BELOW_USD' || triggerType === 'MCAP_ABOVE_USD' ? 'e.g. 300000 (USD)'
               : triggerType === 'TRAILING_STOP' || triggerType === 'TAKE_PROFIT' || triggerType === 'PRICE_DROP_PCT' ? 'e.g. 20 (%)'
               : 'e.g. 0.001 (MON)'
             }

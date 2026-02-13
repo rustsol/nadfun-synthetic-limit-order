@@ -1,7 +1,7 @@
 import type { Order } from '@nadfun/db';
 import type { TokenChainState } from './state-fetcher.js';
 import { calculatePricePerToken } from '@nadfun/shared';
-import { parseEther } from 'viem';
+import { parseEther, formatEther } from 'viem';
 
 export interface EvalResult {
   triggered: boolean;
@@ -39,6 +39,7 @@ export function evaluateOrder(order: Order, state: TokenChainState): EvalResult 
   if (order.direction === 'BUY' && state.isGraduated
     && order.triggerType !== 'POST_GRADUATION'
     && order.triggerType !== 'MCAP_BELOW'
+    && order.triggerType !== 'MCAP_BELOW_USD'
     && order.triggerType !== 'DCA_INTERVAL'
     && order.triggerType !== 'PRICE_DROP_PCT') {
     return {
@@ -160,6 +161,50 @@ export function evaluateOrder(order: Order, state: TokenChainState): EvalResult 
       return {
         triggered: false,
         reason: `Market cap ${marketCap} < target ${triggerValue} — waiting`,
+        abort: false,
+      };
+    }
+
+    case 'MCAP_BELOW_USD': {
+      if (!state.nadMarket?.price_usd) {
+        return { triggered: false, reason: 'USD price data unavailable — skipping', abort: false };
+      }
+      const priceUsd = parseFloat(state.nadMarket.price_usd);
+      const supply = parseFloat(formatEther(state.totalSupply));
+      const mcapUsd = Math.floor(priceUsd * supply);
+      const targetUsd = Number(triggerValue);
+      if (mcapUsd <= targetUsd) {
+        return {
+          triggered: true,
+          reason: `USD market cap $${mcapUsd.toLocaleString()} <= target $${targetUsd.toLocaleString()} — buy condition met`,
+          abort: false,
+        };
+      }
+      return {
+        triggered: false,
+        reason: `USD market cap $${mcapUsd.toLocaleString()} > target $${targetUsd.toLocaleString()} — waiting`,
+        abort: false,
+      };
+    }
+
+    case 'MCAP_ABOVE_USD': {
+      if (!state.nadMarket?.price_usd) {
+        return { triggered: false, reason: 'USD price data unavailable — skipping', abort: false };
+      }
+      const priceUsd = parseFloat(state.nadMarket.price_usd);
+      const supply = parseFloat(formatEther(state.totalSupply));
+      const mcapUsd = Math.floor(priceUsd * supply);
+      const targetUsd = Number(triggerValue);
+      if (mcapUsd >= targetUsd) {
+        return {
+          triggered: true,
+          reason: `USD market cap $${mcapUsd.toLocaleString()} >= target $${targetUsd.toLocaleString()} — sell condition met`,
+          abort: false,
+        };
+      }
+      return {
+        triggered: false,
+        reason: `USD market cap $${mcapUsd.toLocaleString()} < target $${targetUsd.toLocaleString()} — waiting`,
         abort: false,
       };
     }

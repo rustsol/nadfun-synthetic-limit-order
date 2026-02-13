@@ -32,6 +32,9 @@ function formatTrigger(type: string, value: string): string {
     const hours = ms / 3600000;
     return hours >= 1 ? `Every ${hours}h` : `Every ${ms / 60000}m`;
   }
+  if (type === 'MCAP_BELOW_USD' || type === 'MCAP_ABOVE_USD') {
+    return `$${parseInt(value).toLocaleString()}`;
+  }
   try {
     return `${formatEther(BigInt(value))} MON`;
   } catch {
@@ -45,8 +48,10 @@ const TRIGGER_LABELS: Record<string, string> = {
   PROGRESS_BELOW: 'Progress Below',
   PROGRESS_ABOVE: 'Progress Above',
   POST_GRADUATION: 'Post Graduation',
-  MCAP_BELOW: 'MCap Below',
-  MCAP_ABOVE: 'MCap Above',
+  MCAP_BELOW: 'MCap Below (MON)',
+  MCAP_ABOVE: 'MCap Above (MON)',
+  MCAP_BELOW_USD: 'MCap Below (USD)',
+  MCAP_ABOVE_USD: 'MCap Above (USD)',
   TRAILING_STOP: 'Trailing Stop',
   TAKE_PROFIT: 'Take Profit',
   DCA_INTERVAL: 'DCA Interval',

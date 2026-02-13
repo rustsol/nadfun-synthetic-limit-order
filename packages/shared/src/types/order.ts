@@ -8,6 +8,8 @@ export type TriggerType =
   | 'POST_GRADUATION'
   | 'MCAP_BELOW'
   | 'MCAP_ABOVE'
+  | 'MCAP_BELOW_USD'
+  | 'MCAP_ABOVE_USD'
   | 'TRAILING_STOP'
   | 'TAKE_PROFIT'
   | 'STOP_LOSS'

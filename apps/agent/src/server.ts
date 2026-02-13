@@ -252,7 +252,7 @@ export function createServer() {
         return res.status(400).json({ error: 'Direction must be BUY or SELL' });
       }
       // Validate trigger type
-      const validTriggers = ['PRICE_BELOW', 'PRICE_ABOVE', 'PROGRESS_BELOW', 'PROGRESS_ABOVE', 'POST_GRADUATION', 'MCAP_BELOW', 'MCAP_ABOVE', 'TRAILING_STOP', 'TAKE_PROFIT', 'STOP_LOSS', 'DCA_INTERVAL', 'PRICE_DROP_PCT'];
+      const validTriggers = ['PRICE_BELOW', 'PRICE_ABOVE', 'PROGRESS_BELOW', 'PROGRESS_ABOVE', 'POST_GRADUATION', 'MCAP_BELOW', 'MCAP_ABOVE', 'MCAP_BELOW_USD', 'MCAP_ABOVE_USD', 'TRAILING_STOP', 'TAKE_PROFIT', 'STOP_LOSS', 'DCA_INTERVAL', 'PRICE_DROP_PCT'];
       if (!validTriggers.includes(data.triggerType)) {
         return res.status(400).json({ error: `Invalid trigger type: ${data.triggerType}` });
       }
