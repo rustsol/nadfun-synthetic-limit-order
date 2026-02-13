@@ -1,0 +1,116 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+model UserAccount {
+  id               String   @id @default(cuid())
+  walletAddress    String   @unique @db.VarChar(42)
+  agentAddress     String   @unique @db.VarChar(42)
+  agentKeyEnc      String   @db.VarChar(255)
+  autoExecute      Boolean  @default(true)
+  aiRiskCheck      Boolean  @default(false)
+  createdAt        DateTime @default(now())
+  updatedAt        DateTime @updatedAt
+}
+
+model Order {
+  id             String      @id @default(cuid())
+  walletAddress  String      @db.VarChar(42)
+  tokenAddress   String      @db.VarChar(42)
+  direction      Direction
+  inputAmount    String      @db.VarChar(78)
+  triggerType    TriggerType
+  triggerValue   String      @db.VarChar(78)
+  maxSlippageBps Int         @default(300)
+  expiresAt      DateTime
+  status         OrderStatus @default(ACTIVE)
+  routerUsed     String?     @db.VarChar(42)
+  txHash         String?     @db.VarChar(66)
+  referencePrice String?     @db.VarChar(78)
+  peakPrice      String?     @db.VarChar(78)
+  lastExecutedAt DateTime?
+  createdAt      DateTime    @default(now())
+  updatedAt      DateTime    @updatedAt
+
+  executionLogs ExecutionLog[]
+
+  @@index([walletAddress])
+  @@index([status])
+  @@index([tokenAddress, status])
+}
+
+model ExecutionLog {
+  id              String    @id @default(cuid())
+  orderId         String
+  order           Order     @relation(fields: [orderId], references: [id])
+  action          LogAction
+  currentPrice    String?   @db.VarChar(78)
+  currentProgress String?   @db.VarChar(78)
+  isGraduated     Boolean?
+  isLocked        Boolean?
+  routerAddress   String?   @db.VarChar(42)
+  unsignedTxData  Json?
+  txHash          String?   @db.VarChar(66)
+  aiExplanation   String?   @db.Text
+  aiProvider      String?   @db.VarChar(20)
+  reason          String?   @db.Text
+  createdAt       DateTime  @default(now())
+
+  @@index([orderId])
+}
+
+model AiConfig {
+  id                String   @id @default(cuid())
+  walletAddress     String   @unique @db.VarChar(42)
+  preferredProvider String   @default("auto") @db.VarChar(20)
+  groqApiKey        String?  @db.VarChar(255)
+  claudeApiKey      String?  @db.VarChar(255)
+  openaiApiKey      String?  @db.VarChar(255)
+  geminiApiKey      String?  @db.VarChar(255)
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @updatedAt
+}
+
+enum Direction {
+  BUY
+  SELL
+}
+
+enum TriggerType {
+  PRICE_BELOW
+  PRICE_ABOVE
+  PROGRESS_BELOW
+  PROGRESS_ABOVE
+  POST_GRADUATION
+  MCAP_BELOW
+  MCAP_ABOVE
+  TRAILING_STOP
+  TAKE_PROFIT
+  STOP_LOSS
+  DCA_INTERVAL
+  PRICE_DROP_PCT
+}
+
+enum OrderStatus {
+  ACTIVE
+  TRIGGERED
+  EXECUTED
+  EXPIRED
+  CANCELLED
+  FAILED
+}
+
+enum LogAction {
+  CHECK
+  TRIGGER
+  ABORT
+  EXPIRE
+  USER_SIGNED
+  TX_CONFIRMED
+  TX_FAILED
+}

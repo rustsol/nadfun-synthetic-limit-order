@@ -1,0 +1,22 @@
+{
+  "name": "nadfun-synthetic-limit-order",
+  "version": "1.0.0",
+  "private": true,
+  "workspaces": [
+    "packages/*",
+    "apps/*"
+  ],
+  "scripts": {
+    "dev": "concurrently \"npm run dev:agent\" \"npm run dev:web\"",
+    "dev:web": "npm -w apps/web run dev",
+    "dev:agent": "npm -w apps/agent run dev",
+    "build": "npm -w packages/shared run build && npm -w packages/db run generate && npm -w apps/web run build",
+    "db:push": "npm -w packages/db run db:push",
+    "db:generate": "npm -w packages/db run generate"
+  },
+  "devDependencies": {
+    "concurrently": "^9.1.0",
+    "typescript": "^5.7.0",
+    "vitest": "^4.0.18"
+  }
+}
